@@ -1,0 +1,36 @@
+# ── Default-deny whitelist — hanya artefak publik yang ter-track ──
+# Filosofi: tolak SEMUA dulu, izinkan eksplisit. File instruktur/rahasia
+# (soal, rubrik, demo-script, runbook, rehearsal) tak pernah masuk git.
+# GitHub Pages meng-serve repo ini di <user>.github.io/<repo>/
+
+# sampah — selalu tolak
+**/.DS_Store
+
+# tolak semua di root repo
+/*
+
+# izinkan tooling + landing
+!.gitignore
+!.nojekyll
+!index.html
+
+# ── deck slide per minggu: izinkan folder, tolak isinya, izinkan slides/ ──
+# (w04 sengaja TIDAK di-whitelist → deck battle w04 tetap LOCAL, soal aman)
+!w01/
+!w02/
+!w03/
+!w05/
+w0*/*
+!w01/slides/
+!w02/slides/
+!w03/slides/
+!w05/slides/
+
+# ── _shared: hanya dokumen peserta (bukan doc build-internal) ──
+!_shared/
+_shared/*
+!_shared/silabus-vibe-coding.md
+!_shared/versions.md
+!_shared/seed/
+!_shared/templates/
+# build-week-handson.md · deck-engine.md · demo-script-pattern.md → LOCAL (tak di-whitelist)
