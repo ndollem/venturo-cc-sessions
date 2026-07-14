@@ -1,0 +1,51 @@
+{
+  "name": "Vibe Score Leaderboard",
+  "tagline": "Leaderboard skor /grademe tim Venturo — dibangun bertahap sepanjang 12 minggu Claude Code Unleashed",
+  "problem": "Skor /grademe peserta saat ini direkap manual per sesi (screenshot + spreadsheet). Tidak ada tempat terpusat untuk melihat perkembangan skill vibe coding tim dari minggu ke minggu.",
+  "users": ["Peserta program (submit & lihat ranking)", "Fasilitator (monitor perkembangan, tanpa target KPI formal — skor hanya dimonitor)"],
+  "components": {
+    "vibescore-api": {
+      "stack": "Golang + chi, Supabase Postgres (mulai Season 2; in-memory dulu), hosting Vercel free tier",
+      "responsibility": "Menerima skor JSON dari /grademe, menyimpan, menyajikan agregat leaderboard"
+    },
+    "vibescore-web": {
+      "stack": "React + TypeScript (Vite) + Tailwind, hosting Vercel",
+      "responsibility": "Menampilkan leaderboard + form submit skor; SELALU konsumsi API lewat kontrak openapi.yaml, tidak pernah baca source Go"
+    }
+  },
+  "contract": {
+    "source_of_truth": "vibescore-api/openapi.yaml",
+    "endpoints_mvp": ["POST /scores", "GET /leaderboard"],
+    "score_payload": {
+      "participant": "string",
+      "session_date": "ISO8601",
+      "total_score": 0,
+      "breakdown": {
+        "planning": 0,
+        "context": 0,
+        "decomposition": 0,
+        "delegation": 0,
+        "verification": 0,
+        "token_efficiency": 0,
+        "documentation": 0
+      },
+      "misses": ["string"],
+      "next_session_advice": "string"
+    },
+    "breakdown_max": {
+      "planning": 20,
+      "context": 20,
+      "decomposition": 15,
+      "delegation": 15,
+      "verification": 15,
+      "token_efficiency": 10,
+      "documentation": 5
+    }
+  },
+  "roadmap": [
+    { "season": 1, "state": "Kontrak + skeleton in-memory + leaderboard page (FE↔BE lokal)" },
+    { "season": 2, "state": "Persist ke Supabase, upload otomatis dari /grademe --upload (API key per peserta), deploy production" },
+    { "season": 3, "state": "History per peserta, hardening security, insight dashboard (agregat per dimensi, tren, top movers)" }
+  ],
+  "non_goals": ["Autentikasi login penuh (cukup API key per peserta mulai S2)", "Mobile app", "Target KPI formal — monitor saja"]
+}

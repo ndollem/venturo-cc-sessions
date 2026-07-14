@@ -26,11 +26,20 @@ w0*/*
 !w03/slides/
 !w05/slides/
 
+# ── w01: dokumen peserta (exercise + handout + definisi proyek) ──
+!w01/exercise.md
+!w01/handout.md
+!w01/assets/
+w01/assets/*
+!w01/assets/project-definition.json
+
 # ── _shared: hanya dokumen peserta (bukan doc build-internal) ──
 !_shared/
 _shared/*
 !_shared/silabus-vibe-coding.md
+!_shared/persiapan-peserta.md
 !_shared/versions.md
+# stage-setup.md + bootstrap-stage.sh → LOCAL (materi pemateri, TAK di-publish)
 !_shared/seed/
 !_shared/templates/
 # build-week-handson.md · deck-engine.md · demo-script-pattern.md → LOCAL (tak di-whitelist)
