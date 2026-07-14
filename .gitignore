@@ -47,6 +47,7 @@ _shared/*
 !_shared/silabus-vibe-coding.md
 !_shared/persiapan-peserta.md
 !_shared/versions.md
+!_shared/CLAUDE.md
 # stage-setup.md + bootstrap-stage.sh → LOCAL (materi pemateri, TAK di-publish)
 !_shared/seed/
 !_shared/templates/
