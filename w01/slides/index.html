@@ -57,7 +57,7 @@ body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased
 /* ── stage & scaling ─────────────────────────────────────────── */
 #viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ivory)}
 #stage{
-  position:relative;width:1920px;height:1080px;
+  position:relative;width:1920px;height:1080px;flex:0 0 auto;
   transform-origin:center center;
   background:var(--ivory);overflow:hidden;
   box-shadow:0 40px 120px -40px rgba(25,25,25,.35);
@@ -287,7 +287,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.14;letter-spacin
 .fbox.src{border-color:var(--terracotta)}
 .fstack{display:flex;flex-direction:column;gap:16px}
 .fstack .fbox{padding:20px 26px;font-size:22px}
-.farrow{color:var(--terracotta);font-size:34px;padding:0 26px;flex-shrink:0}
+.farrow{color:var(--terracotta);font-size:34px;padding:0 26px;flex-shrink:0;}
 .s14 .save{margin-top:56px;display:inline-flex;align-self:flex-start;align-items:center;gap:18px;
   font-family:var(--mono);font-size:26px;background:var(--term-bg);color:var(--term-fg);
   padding:16px 30px;border-radius:12px}
@@ -358,10 +358,10 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.14;letter-spacin
 .s19 .tip .kbd{background:#eae7de}
 
 /* ── chrome: progress + help ─────────────────────────────────── */
-#num{position:absolute;right:40px;bottom:32px;z-index:20;font-family:var(--mono);
+#num{position:absolute;right:40px;bottom:76px;z-index:20;font-family:var(--mono);
   font-size:22px;color:var(--cloudy);opacity:.7;letter-spacing:.1em}
 #num b{color:var(--crail)}
-#hint{position:absolute;left:40px;bottom:32px;z-index:20;font-family:var(--sans);
+#hint{position:absolute;left:40px;bottom:76px;z-index:20;font-family:var(--sans);
   font-size:18px;color:var(--cloudy);opacity:.55}
 #help{position:fixed;inset:0;z-index:40;background:rgba(25,25,25,.82);display:none;
   align-items:center;justify-content:center;backdrop-filter:blur(4px)}
@@ -663,13 +663,13 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.14;letter-spacin
     <div class="eyebrow">Apa yang barusan terjadi</div>
     <div class="flow">
       <div class="fbox src fragment" style="transform:translateY(24px)">project-definition.json</div>
-      <span class="farrow fragment" style="transform:none">→</span>
+      <span class="farrow fragment" style="transform:none;margin-top:50px;">→</span>
       <div class="fstack fragment" style="transform:translateY(24px)">
         <div class="fbox">CLAUDE.md</div>
         <div class="fbox">AGENTS.md</div>
         <div class="fbox">docs/01-prd.md</div>
       </div>
-      <span class="farrow fragment" style="transform:none">→</span>
+      <span class="farrow fragment" style="transform:none;margin-top:50px;">→</span>
       <div class="fbox fragment" style="transform:translateY(24px);border-color:var(--terracotta);color:var(--crail)">Repo SIAP di-vibe-code</div>
     </div>
     <div class="save fragment" style="transform:translateY(24px)">save point → tag <span class="tagn">s1w1-end</span></div>
@@ -957,9 +957,11 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.14;letter-spacin
   }
 
   /* ── fit / scale ─────────────────────────────────────────── */
+  var CROP = 0.10;   // isi lebar; boleh potong padding atas/bawah s/d 10% tinggi window
   function fit(){
     if(window.innerWidth <= 820){ stage.style.transform = ''; return; } // mobile: CSS reflow ambil alih
-    var s = Math.min(window.innerWidth/1920, window.innerHeight/1080);
+    // fill-width, tapi batasi crop vertikal supaya konten inti tak terpotong
+    var s = Math.min(window.innerWidth/1920, (window.innerHeight/1080)*(1+CROP));
     stage.style.transform = 'scale('+s+')';
   }
   window.addEventListener('resize', function(){ fit(); if(slides[cur]) lockHeights(slides[cur]); });

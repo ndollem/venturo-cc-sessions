@@ -73,7 +73,7 @@ body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased
 /* ── stage & scaling ─────────────────────────────────────────── */
 #viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ivory)}
 #stage{
-  position:relative;width:1920px;height:1080px;
+  position:relative;width:1920px;height:1080px;flex:0 0 auto;
   transform-origin:center center;
   background:var(--ivory);overflow:hidden;
   box-shadow:0 40px 120px -40px rgba(25,25,25,.35);
@@ -345,10 +345,10 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.13;letter-spacin
 .s-teaser .tip .kbd{background:#eae7de}
 
 /* ── chrome: progress + help ─────────────────────────────────── */
-#num{position:absolute;right:40px;bottom:32px;z-index:20;font-family:var(--mono);
+#num{position:absolute;right:40px;bottom:76px;z-index:20;font-family:var(--mono);
   font-size:22px;color:var(--cloudy);opacity:.7;letter-spacing:.1em}
 #num b{color:var(--crail)}
-#hint{position:absolute;left:40px;bottom:32px;z-index:20;font-family:var(--sans);
+#hint{position:absolute;left:40px;bottom:76px;z-index:20;font-family:var(--sans);
   font-size:18px;color:var(--cloudy);opacity:.55}
 #help{position:fixed;inset:0;z-index:40;background:rgba(25,25,25,.82);display:none;
   align-items:center;justify-content:center;backdrop-filter:blur(4px)}
@@ -1006,9 +1006,11 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.13;letter-spacin
   }
 
   /* ── fit / scale ─────────────────────────────────────────── */
+  var CROP = 0.10;   // isi lebar; boleh potong padding atas/bawah s/d 10% tinggi window
   function fit(){
     if(window.innerWidth <= 820){ stage.style.transform = ''; return; } // mobile: CSS reflow ambil alih
-    var s = Math.min(window.innerWidth/1920, window.innerHeight/1080);
+    // fill-width, tapi batasi crop vertikal supaya konten inti tak terpotong
+    var s = Math.min(window.innerWidth/1920, (window.innerHeight/1080)*(1+CROP));
     stage.style.transform = 'scale('+s+')';
   }
   window.addEventListener('resize', function(){ fit(); if(slides[cur]) lockHeights(slides[cur]); });
