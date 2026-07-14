@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rule of Engagement · Vibe Coding Sharing Session</title>
+
+<style>
+:root{
+  --ivory:#F4F3EE;
+  --cream:#FAF9F5;
+  --terracotta:#D97757;
+  --crail:#C15F3C;
+  --ink:#191919;
+  --cloudy:#B1ADA1;
+  --tan:#D4A27F;
+  --term-bg:#1F1E1D;
+  --term-fg:#F4F3EE;
+
+  --serif:"New York","Iowan Old Style",Georgia,serif;
+  --sans:-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"SF Mono",Menlo,Consolas,monospace;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--ivory);overflow:hidden}
+body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* ── stage & scaling ─────────────────────────────────────────── */
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ivory)}
+#stage{
+  position:relative;width:1920px;height:1080px;
+  transform-origin:center center;
+  background:var(--ivory);overflow:hidden;
+  box-shadow:0 40px 120px -40px rgba(25,25,25,.35);
+}
+
+/* ── ambient blobs (parallax per slide) ──────────────────────── */
+#blobs{position:absolute;inset:-20%;z-index:0;pointer-events:none;
+  transition:transform 1.1s cubic-bezier(.22,.61,.36,1);filter:blur(8px)}
+#blobs::before,#blobs::after{content:"";position:absolute;border-radius:50%}
+#blobs::before{width:900px;height:900px;left:-6%;top:-14%;
+  background:radial-gradient(circle at 40% 40%,rgba(217,119,87,.16),transparent 62%)}
+#blobs::after{width:820px;height:820px;right:-8%;bottom:-16%;
+  background:radial-gradient(circle at 55% 45%,rgba(212,162,127,.16),transparent 60%)}
+
+/* ── slides ──────────────────────────────────────────────────── */
+.slide{
+  position:absolute;inset:0;z-index:1;display:none;
+  flex-direction:column;justify-content:center;
+  padding:110px 140px;
+}
+.slide.active{display:flex;animation:slideEnter .55s cubic-bezier(.22,.61,.36,1) both}
+@keyframes slideEnter{from{opacity:0}to{opacity:1}}
+
+.eyebrow{font-family:var(--sans);font-size:22px;font-weight:600;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--crail);margin-bottom:38px;display:flex;align-items:center;gap:20px}
+.eyebrow::before{content:"";width:52px;height:2px;background:var(--terracotta)}
+.eyebrow.plain::before{display:none}
+
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.14;letter-spacing:-.015em;text-wrap:balance}
+.lead{font-family:var(--sans);font-size:30px;line-height:1.5;color:#3a3a38;max-width:1180px}
+.muted{color:var(--cloudy)}
+.accent{color:var(--terracotta)}
+.accent-d{color:var(--crail)}
+
+/* fragments */
+.fragment{opacity:0;transform:translateY(24px);
+  transition:opacity .6s ease,transform .6s cubic-bezier(.22,.61,.36,1)}
+.fragment.revealed{opacity:1;transform:none}
+.fragment.pop{transform:scale(.7);transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1)}
+.fragment.pop.revealed{transform:scale(1)}
+
+/* stagger utility */
+.stagger>*{opacity:0;transform:translateY(24px)}
+.slide.active .stagger>*{animation:rise .6s cubic-bezier(.22,.61,.36,1) both}
+@keyframes rise{to{opacity:1;transform:none}}
+
+/* entrance lateral */
+.slide.active .in-left{animation:inLeft .8s cubic-bezier(.34,1.2,.5,1) both}
+.slide.active .in-right{animation:inRight .8s cubic-bezier(.34,1.2,.5,1) both}
+@keyframes inLeft{from{opacity:0;transform:translateX(-90px)}to{opacity:1;transform:none}}
+@keyframes inRight{from{opacity:0;transform:translateX(90px)}to{opacity:1;transform:none}}
+
+.caption{margin-top:40px;font-family:var(--serif);font-style:italic;font-size:34px;color:var(--ink)}
+.kbd{font-family:var(--mono);font-size:.82em;background:#eae7de;border:1px solid #d9d5c9;
+  border-radius:8px;padding:3px 12px;color:var(--ink)}
+.tax{font-family:var(--serif);font-style:italic;font-size:38px;color:var(--ink)}
+.tax b{color:var(--terracotta);font-style:normal}
+
+/* ── cover (s1) ──────────────────────────────────────────────── */
+.s1 .kicker{font-family:var(--sans);font-size:26px;font-weight:600;letter-spacing:.34em;
+  text-transform:uppercase;color:var(--crail);margin-bottom:44px}
+.s1 h1{font-size:138px;line-height:1.06;max-width:1620px}
+.underline-draw{position:relative;display:inline-block}
+.underline-draw svg{position:absolute;left:-2%;bottom:-14px;width:104%;height:26px;overflow:visible}
+.underline-draw path{fill:none;stroke:var(--terracotta);stroke-width:9;stroke-linecap:round;
+  stroke-dasharray:1200;stroke-dashoffset:1200}
+.slide.active .underline-draw path{animation:draw 1.1s .5s cubic-bezier(.6,0,.35,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.s1 .meta{margin-top:60px;font-size:32px;color:#3a3a38}
+.s1 .meta b{color:var(--ink);font-weight:600}
+.s1 .quote{margin-top:52px;max-width:1260px;font-family:var(--serif);font-style:italic;
+  font-size:36px;line-height:1.4;color:var(--ink);border-left:4px solid var(--terracotta);padding-left:34px}
+
+/* ── pair layout (.split) ────────────────────────────────────── */
+.split{display:flex;gap:0;margin-top:14px;align-items:stretch}
+.roe-item{flex:1;padding:8px 56px;display:flex;flex-direction:column}
+.roe-item:first-child{padding-left:0}
+.roe-item:last-child{padding-right:0}
+.split-mid{width:2px;background:linear-gradient(180deg,transparent,var(--terracotta),transparent);
+  align-self:stretch;flex-shrink:0}
+
+.roe-head{display:flex;align-items:center;gap:20px;margin-bottom:16px}
+.roe-num{width:60px;height:60px;border-radius:50%;background:var(--terracotta);color:#fff;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:30px;font-weight:600}
+.roe-emoji{font-size:40px;line-height:1}
+.roe-title{font-family:var(--serif);font-size:44px;font-weight:600;line-height:1.1;margin-bottom:18px}
+.roe-say{font-size:27px;line-height:1.5;color:#3a3a38;max-width:640px}
+.roe-say b{color:var(--ink)}
+.roe-say .hl{color:var(--terracotta);font-weight:600}
+
+/* ── sprite illustration (3×3 grid → 9 rule urut baca) ───────── */
+.roe-fig{aspect-ratio:1/1;border-radius:20px;flex-shrink:0;
+  background-image:url("img/ilustration-sprite.png");
+  background-size:300% 300%;background-repeat:no-repeat;
+  box-shadow:0 26px 60px -30px rgba(25,25,25,.42),0 0 0 1px rgba(25,25,25,.05)}
+.f1{background-position:0%   0%}   .f2{background-position:50%  0%}   .f3{background-position:100% 0%}
+.f4{background-position:0%   50%}  .f5{background-position:50%  50%}  .f6{background-position:100% 50%}
+.f7{background-position:0%   100%} .f8{background-position:50%  100%} .f9{background-position:100% 100%}
+
+/* layout A · horizontal duo (gambar atas, teks bawah) */
+.split .roe-fig{width:100%;max-width:400px;margin-bottom:28px}
+
+/* layout B · vertical zigzag (gambar samping, teks samping; baris genap flip) */
+.stack-v{display:flex;flex-direction:column;gap:40px;margin-top:8px}
+.roe-row{display:flex;gap:56px;align-items:center}
+.roe-row.flip{flex-direction:row-reverse}
+.roe-row .roe-fig{width:280px}
+.roe-row .roe-text{flex:1}
+.roe-row .roe-title{font-size:40px;margin-bottom:14px}
+.roe-row .roe-say{font-size:25px;max-width:820px}
+
+/* ── solo rule (s-solo) — gambar besar samping teks ──────────── */
+.s-solo .solo-wrap{display:flex;gap:80px;align-items:center;margin-top:20px}
+.s-solo .roe-fig{width:440px}
+.s-solo .solo-text{flex:1}
+.s-solo .roe-title{font-size:72px;margin-top:6px}
+.s-solo .roe-say{font-size:34px;max-width:900px;margin-top:10px}
+
+/* ── tanya ceban (s-ceban) ───────────────────────────────────── */
+.ceban{display:flex;gap:70px;margin-top:14px;align-items:center}
+.ceban-img{flex:0 0 520px;aspect-ratio:1/1;width:520px;border-radius:24px;overflow:hidden;
+  background:var(--cream);border:1px solid #e6e2d8;box-shadow:0 30px 70px -34px rgba(25,25,25,.45);
+  display:flex;align-items:center;justify-content:center}
+.ceban-img img{width:100%;height:100%;object-fit:cover;display:block}
+.ceban-ph{display:none;flex-direction:column;align-items:center;gap:14px;padding:40px;text-align:center;
+  color:var(--cloudy);font-family:var(--mono)}
+.ceban-ph .big{font-size:120px;line-height:1}
+.ceban-ph .sub{font-size:19px;letter-spacing:.02em}
+.ceban-body{flex:1}
+.ceban-rules{display:flex;flex-direction:column;gap:22px;margin:30px 0 40px}
+.ceban-rule{display:flex;gap:18px;align-items:flex-start;font-size:29px;color:#3a3a38;line-height:1.45}
+.ceban-rule .mk{color:#28c840;font-weight:700;font-family:var(--mono);flex-shrink:0}
+.ceban-rule b{color:var(--ink)}
+.reward{display:inline-flex;align-items:center;gap:16px;background:var(--terracotta);color:#fff;
+  font-family:var(--serif);font-size:46px;font-weight:600;padding:20px 40px;border-radius:100px;
+  box-shadow:0 20px 44px -22px rgba(217,119,87,.7)}
+.ceban-foot{margin-top:34px;font-size:24px;color:#4a4a48}
+
+/* ── closing (s-close) ───────────────────────────────────────── */
+.s-close{align-items:center;text-align:center}
+.s-close .hope{font-family:var(--sans);font-size:24px;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--crail);margin-bottom:40px}
+.s-close .big{font-family:var(--serif);font-size:72px;line-height:1.22;max-width:1440px}
+.s-close .big .hl{color:var(--terracotta)}
+.s-close .go{margin-top:60px;font-family:var(--serif);font-style:italic;font-size:44px}
+
+/* ── chrome: progress + help ─────────────────────────────────── */
+#num{position:absolute;right:40px;bottom:32px;z-index:20;font-family:var(--mono);
+  font-size:22px;color:var(--cloudy);opacity:.7;letter-spacing:.1em}
+#num b{color:var(--crail)}
+#hint{position:absolute;left:40px;bottom:32px;z-index:20;font-family:var(--sans);
+  font-size:18px;color:var(--cloudy);opacity:.55}
+#help{position:fixed;inset:0;z-index:40;background:rgba(25,25,25,.82);display:none;
+  align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+#help.on{display:flex}
+#help .box{background:var(--cream);border-radius:20px;padding:56px 64px;max-width:640px;width:100%}
+#help h3{font-size:40px;margin-bottom:30px}
+#help .hrow{display:flex;justify-content:space-between;align-items:center;padding:14px 0;
+  border-bottom:1px solid #e6e2d8;font-size:22px}
+#help .hrow:last-child{border:none}
+#help .hk{font-family:var(--mono);background:#eae7de;border-radius:8px;padding:4px 14px;color:var(--ink)}
+#help .close{margin-top:28px;font-size:18px;color:var(--cloudy)}
+
+/* ── reduced motion / static ─────────────────────────────────── */
+.static .fragment{transition:none !important}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;animation-delay:0ms !important}
+  .fragment{transition:opacity .25s ease !important;transform:none !important}
+  .slide.active .underline-draw path{stroke-dashoffset:0 !important;animation:none}
+}
+.static *{animation:none !important}
+.static .slide.active .underline-draw path{stroke-dashoffset:0 !important}
+.static .fragment{opacity:1 !important;transform:none !important}
+.static .stagger>*{opacity:1 !important;transform:none !important}
+
+/* ── mobile / layar kecil (tap-through, tanpa transform-scale) ─────────── */
+@media(max-width:820px){
+  html,body{overflow:auto}
+  #viewport{position:static;display:block;min-height:100dvh}
+  #stage{position:relative;width:100vw;min-height:100dvh;height:auto;
+    transform:none !important;box-shadow:none}
+  #blobs{position:fixed}
+
+  .slide{padding:56px 20px 92px;justify-content:flex-start}
+  .slide.active{position:relative;inset:auto;min-height:100dvh}
+
+  .eyebrow{font-size:15px;letter-spacing:.2em;margin-bottom:24px}
+  .lead{font-size:20px}
+  .caption{font-size:24px;margin-top:28px}
+  .tax{font-size:26px}
+
+  /* cover */
+  .s1 h1{font-size:clamp(44px,12vw,64px);max-width:100%}
+  .s1 .kicker{font-size:15px;letter-spacing:.2em;margin-bottom:26px}
+  .underline-draw svg{bottom:-8px;height:16px}
+  .s1 .meta{font-size:20px;margin-top:36px}
+  .s1 .quote{font-size:22px;margin-top:32px;padding-left:22px}
+
+  /* pair → 1 kolom */
+  .split{flex-direction:column;gap:44px}
+  .roe-item{padding:0 !important}
+  .split-mid{display:none}
+  .roe-num{width:48px;height:48px;font-size:24px}
+  .roe-emoji{font-size:32px}
+  .roe-title{font-size:32px !important}
+  .roe-say{font-size:21px !important;max-width:100%}
+
+  /* sprite → gambar atas, teks bawah (semua layout collapse) */
+  .split .roe-fig{max-width:360px}
+  .stack-v{gap:40px}
+  .roe-row,.roe-row.flip{flex-direction:column;gap:22px;align-items:stretch}
+  .roe-row .roe-fig{width:100%;max-width:360px}
+  .s-solo .solo-wrap{flex-direction:column;gap:28px;align-items:stretch}
+  .s-solo .roe-fig{width:100%;max-width:360px}
+  .roe-fig{margin-bottom:0 !important}
+
+  .s-solo .roe-title{font-size:clamp(34px,9vw,48px) !important}
+  .s-solo .roe-say{font-size:22px !important}
+
+  /* ceban → stack */
+  .ceban{flex-direction:column;gap:32px;align-items:stretch}
+  .ceban-img{flex:1 1 auto;width:100%;max-width:420px;margin:0 auto}
+  .ceban-rule{font-size:21px}
+  .reward{font-size:32px;padding:16px 30px}
+  .ceban-foot{font-size:19px}
+
+  /* closing */
+  .s-close .big{font-size:clamp(34px,8vw,52px);max-width:100%}
+  .s-close .go{font-size:30px}
+  .s-close .hope{font-size:16px;letter-spacing:.16em}
+
+  #num{right:16px;bottom:14px;font-size:16px}
+  #hint{display:none}
+}
+</style>
+</head>
+<body>
+<div id="viewport">
+<div id="stage">
+  <div id="blobs"></div>
+
+  <!-- ══ 1 · COVER ══════════════════════════════════════════════ -->
+  <section class="slide s1" data-slide>
+    <div class="kicker">Vibe Coding Sharing Session · 15 Juli 2026</div>
+    <h1>Rule of
+      <span class="underline-draw">Engagement
+        <svg viewBox="0 0 300 34" preserveAspectRatio="none"><path d="M4 20 C 80 30, 220 8, 296 22"/></svg>
+      </span>
+    </h1>
+    <div class="meta">10 aturan main · <b>diskusi dua arah</b>, bukan presentasi satu arah</div>
+    <div class="quote fragment">Tujuan sesi ini bukan menyelesaikan semua slide —<br>
+      tapi memastikan semua orang pulang membawa <b>insight baru.</b></div>
+  </section>
+
+  <!-- ══ 2 · RULE 1 + 2 ════════════════════════════════════════ -->
+  <section class="slide s-pair" data-slide>
+    <div class="eyebrow">Aturan 1 &amp; 2</div>
+    <div class="split">
+      <div class="roe-item in-left">
+        <div class="roe-fig f1"></div>
+        <div class="roe-head"><span class="roe-num">1</span><span class="roe-emoji">🧠</span></div>
+        <div class="roe-title">I'm Not the Smartest<br>Person in the Room</div>
+        <div class="roe-say">Jangan anggap semua yang saya sampaikan pasti benar. Target kita bukan
+          siapa paling pintar — tapi <span class="hl">pemahaman terbaik bersama.</span></div>
+      </div>
+      <div class="split-mid"></div>
+      <div class="roe-item fragment">
+        <div class="roe-fig f2"></div>
+        <div class="roe-head"><span class="roe-num">2</span><span class="roe-emoji">🙋</span></div>
+        <div class="roe-title">Interrupt Me<br>Anytime</div>
+        <div class="roe-say">Bingung, tidak setuju, mau menambah konteks? Langsung saja. Berhenti
+          <b>2 menit</b> menyamakan paham &gt; kehilangan konteks <b>20 menit.</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 3 · RULE 3 + 4 ════════════════════════════════════════ -->
+  <section class="slide s-pair" data-slide>
+    <div class="eyebrow">Aturan 3 &amp; 4</div>
+    <div class="stack-v">
+      <div class="roe-row in-left">
+        <div class="roe-fig f3"></div>
+        <div class="roe-text">
+          <div class="roe-head"><span class="roe-num">3</span><span class="roe-emoji">🤝</span></div>
+          <div class="roe-title">Challenge Ideas, Not People</div>
+          <div class="roe-say">Silakan berbeda, menyanggah, mendebat. Tapi <span class="hl">serang idenya,
+            bukan orangnya.</span> "Aku punya pendekatan lain karena…" &gt; "Itu salah."</div>
+        </div>
+      </div>
+      <div class="roe-row flip fragment">
+        <div class="roe-fig f4"></div>
+        <div class="roe-text">
+          <div class="roe-head"><span class="roe-num">4</span><span class="roe-emoji">💬</span></div>
+          <div class="roe-title">No Question Is Too Basic</div>
+          <div class="roe-say">Kalau kamu bingung, <b>ada orang lain yang juga bingung</b> tapi belum
+            berani bertanya. Bertanya = cara belajar <span class="hl">paling cepat.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 4 · RULE 5 + 6 ════════════════════════════════════════ -->
+  <section class="slide s-pair" data-slide>
+    <div class="eyebrow">Aturan 5 &amp; 6</div>
+    <div class="split">
+      <div class="roe-item in-left">
+        <div class="roe-fig f5"></div>
+        <div class="roe-head"><span class="roe-num">5</span><span class="roe-emoji">🚀</span></div>
+        <div class="roe-title">Share Real<br>Experience</div>
+        <div class="roe-say">Punya pengalaman nyata? Bagikan. <span class="hl">Pengalaman jauh lebih
+          berharga daripada teori.</span></div>
+      </div>
+      <div class="split-mid"></div>
+      <div class="roe-item fragment">
+        <div class="roe-fig f6"></div>
+        <div class="roe-head"><span class="roe-num">6</span><span class="roe-emoji">🤷</span></div>
+        <div class="roe-title">It's OK to Say<br>"I Don't Know"</div>
+        <div class="roe-say">Belum tahu jawabannya? Tidak perlu memaksakan. <b>Kita cari bersama.</b>
+          Dokumentasi resmi AI pun bisa berubah dalam <span class="hl">hitungan minggu.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 5 · RULE 7 + 8 ════════════════════════════════════════ -->
+  <section class="slide s-pair" data-slide>
+    <div class="eyebrow">Aturan 7 &amp; 8</div>
+    <div class="stack-v">
+      <div class="roe-row in-left">
+        <div class="roe-fig f7"></div>
+        <div class="roe-text">
+          <div class="roe-head"><span class="roe-num">7</span><span class="roe-emoji">⚡</span></div>
+          <div class="roe-title">AI Changes Fast</div>
+          <div class="roe-say">Benar minggu lalu <b>≠</b> benar minggu ini. Ada update Claude / GPT /
+            Gemini / MCP / Agent? <span class="hl">Silakan bagikan</span> — sesi jadi lebih kaya.</div>
+        </div>
+      </div>
+      <div class="roe-row flip fragment">
+        <div class="roe-fig f8"></div>
+        <div class="roe-text">
+          <div class="roe-head"><span class="roe-num">8</span><span class="roe-emoji">📝</span></div>
+          <div class="roe-title">Parking Lot</div>
+          <div class="roe-say">Pertanyaan menarik tapi terlalu jauh dari topik? <span class="hl">Kita parkir
+            dulu, catat.</span> Kalau waktu memungkinkan, dibahas di akhir.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 6 · RULE 9 (solo) ═════════════════════════════════════ -->
+  <section class="slide s-solo" data-slide>
+    <div class="eyebrow">Aturan 9</div>
+    <div class="solo-wrap">
+      <div class="roe-fig f9"></div>
+      <div class="solo-text">
+        <div class="roe-head"><span class="roe-num">9</span><span class="roe-emoji">🎯</span></div>
+        <div class="roe-title">Have Fun</div>
+        <div class="roe-say">Target hari ini <b>bukan</b> menyelesaikan semua slide — tapi dapat insight baru,
+          workflow baru, dan pulang bawa <span class="hl">sesuatu yang bisa langsung dicoba besok.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 7 · TANYA CEBAN (slide khusus) ════════════════════════ -->
+  <section class="slide s-ceban" data-slide>
+    <div class="eyebrow">Aturan 10 · game sepanjang sesi</div>
+    <div class="ceban">
+      <div class="ceban-img">
+        <img src="img/tanya-ceban.png" alt="Tanya Ceban"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ceban-ph">
+          <div class="big">💸</div>
+          <div class="sub">img/tanya-ceban.png — drop gambar 1×1 di sini</div>
+        </div>
+      </div>
+      <div class="ceban-body">
+        <h2 class="roe-title" style="font-size:60px">Tanya Ceban</h2>
+        <div class="ceban-rules">
+          <div class="ceban-rule fragment"><span class="mk">✓</span><span>Siapa pun boleh <b>bertanya.</b> Siapa pun boleh <b>menjawab</b> — tak harus pemateri.</span></div>
+          <div class="ceban-rule fragment"><span class="mk">✓</span><span>Jawaban yang <b>benar / membantu / memberi insight</b> → dapat reward.</span></div>
+        </div>
+        <div class="fragment"><span class="reward">💵 Rp10.000</span></div>
+        <div class="ceban-foot fragment">Supaya semua aktif berpikir, bukan cuma mendengar. Makin banyak diskusi → makin banyak yang belajar (&amp; bawa pulang ceban 😄).</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 8 · CLOSING ═══════════════════════════════════════════ -->
+  <section class="slide s-close" data-slide>
+    <div class="hope">Satu harapan saya</div>
+    <div class="big fragment pop">Kalau ada <span class="hl">satu orang</span> yang pulang membawa
+      <span class="hl">satu ide baru</span><br>yang bisa langsung dicoba besok di projectnya —<br>
+      sharing session hari ini <b>sudah berhasil.</b></div>
+    <div class="go fragment">Mari kita belajar bersama 🚀</div>
+  </section>
+
+  <div id="num"><b>01</b> / 08</div>
+  <div id="hint">→ lanjut · ← mundur · ? bantuan</div>
+</div><!--/stage-->
+</div><!--/viewport-->
+
+<div id="help">
+  <div class="box">
+    <h3>Navigasi deck</h3>
+    <div class="hrow"><span>Lanjut (fragment → slide)</span><span class="hk">→ / Space / klik</span></div>
+    <div class="hrow"><span>Mundur</span><span class="hk">←</span></div>
+    <div class="hrow"><span>Slide pertama / terakhir</span><span class="hk">Home / End</span></div>
+    <div class="hrow"><span>Lompat ke slide</span><span class="hk">URL #n</span></div>
+    <div class="hrow"><span>Mode statis (screenshot)</span><span class="hk">?static=1</span></div>
+    <div class="hrow"><span>Tutup bantuan</span><span class="hk">? / Esc</span></div>
+    <div class="close">Tekan ? lagi untuk menutup.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var params = new URLSearchParams(location.search);
+  var STATIC = params.get('static') === '1';
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var INSTANT = STATIC || reduced;
+  if(STATIC) document.documentElement.classList.add('static');
+
+  var stage = document.getElementById('stage');
+  var blobs = document.getElementById('blobs');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var numEl = document.getElementById('num');
+  var helpEl = document.getElementById('help');
+  var cur = 0, step = 0, gen = 0;
+
+  /* ── typing (dipakai bila ada elemen .type) ──────────────────── */
+  function typeEl(el, instant){
+    var text = el.getAttribute('data-text') || '';
+    if(instant || INSTANT){ el.textContent = text; el.classList.remove('typing'); return; }
+    var myGen = gen;
+    el.textContent=''; el.classList.add('typing');
+    var i = 0, speed = text.length > 90 ? 14 : 26;
+    (function tick(){
+      if(myGen !== gen){ return; }
+      if(i <= text.length){ el.textContent = text.slice(0,i); i++; setTimeout(tick, speed); }
+      else { el.classList.remove('typing'); }
+    })();
+  }
+  function typeIn(container, instant){
+    var els = container.querySelectorAll('.type');
+    for(var i=0;i<els.length;i++){
+      (function(el){
+        var d = parseInt(el.getAttribute('data-delay')||'0',10);
+        if(instant || INSTANT || !d) typeEl(el, instant);
+        else setTimeout(function(){ typeEl(el,false); }, d);
+      })(els[i]);
+    }
+  }
+
+  /* ── fragments ───────────────────────────────────────────── */
+  function fragsOf(sl){ return Array.prototype.slice.call(sl.querySelectorAll('.fragment')); }
+  function reveal(fr, instant){ fr.classList.add('revealed'); typeIn(fr, instant); }
+  function hide(fr){ fr.classList.remove('revealed'); }
+
+  /* ── slide control ───────────────────────────────────────── */
+  function updateBlobs(i){
+    var x = (i % 4) * -34 - i*3;
+    var y = (i % 3) * 26 - 20;
+    blobs.style.transform = 'translate('+x+'px,'+y+'px)';
+  }
+  function pad(n){ return (n<10?'0':'')+n; }
+  function updateNum(){ numEl.innerHTML = '<b>'+pad(cur+1)+'</b> / '+pad(slides.length); }
+
+  function show(i, atEnd){
+    i = Math.max(0, Math.min(slides.length-1, i));
+    gen++;
+    slides.forEach(function(s){ s.classList.remove('active'); });
+    cur = i;
+    var sl = slides[cur];
+    var frags = fragsOf(sl);
+    frags.forEach(function(f){ f.classList.remove('revealed'); });
+    sl.classList.add('active');
+    updateBlobs(cur); updateNum();
+    if(location.hash !== '#'+(cur+1)) history.replaceState(null,'','#'+(cur+1));
+
+    if(STATIC || atEnd){
+      step = frags.length;
+      frags.forEach(function(f){ reveal(f, true); });
+      typeIn(sl, true);
+    } else {
+      step = 0;
+      typeIn(sl, false);
+    }
+  }
+
+  function next(){
+    var frags = fragsOf(slides[cur]);
+    if(step < frags.length){ reveal(frags[step], false); step++; }
+    else if(cur < slides.length-1){ show(cur+1, false); }
+  }
+  function prev(){
+    var frags = fragsOf(slides[cur]);
+    if(step > 0){ step--; hide(frags[step]); }
+    else if(cur > 0){ show(cur-1, true); }
+  }
+
+  /* ── fit / scale ─────────────────────────────────────────── */
+  function fit(){
+    if(window.innerWidth <= 820){ stage.style.transform = ''; return; }
+    var s = Math.min(window.innerWidth/1920, window.innerHeight/1080);
+    stage.style.transform = 'scale('+s+')';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  /* ── input ───────────────────────────────────────────────── */
+  function toggleHelp(){ helpEl.classList.toggle('on'); }
+  document.addEventListener('keydown', function(e){
+    if(e.key==='?'){ e.preventDefault(); toggleHelp(); return; }
+    if(helpEl.classList.contains('on')){ if(e.key==='Escape') toggleHelp(); return; }
+    switch(e.key){
+      case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); show(0,false); break;
+      case 'End': e.preventDefault(); show(slides.length-1,false); break;
+    }
+  });
+  document.getElementById('viewport').addEventListener('click', function(e){
+    if(helpEl.classList.contains('on')) return;
+    next();
+  });
+  helpEl.addEventListener('click', toggleHelp);
+  window.addEventListener('hashchange', function(){
+    var n = parseInt((location.hash||'').replace('#',''),10);
+    if(!isNaN(n) && n>=1 && n<=slides.length && n-1 !== cur) show(n-1, false);
+  });
+
+  /* ── boot ────────────────────────────────────────────────── */
+  var start = parseInt((location.hash||'').replace('#',''),10);
+  if(isNaN(start) || start<1 || start>slides.length) start = 1;
+  show(start-1, false);
+})();
+</script>
+</body>
+</html>

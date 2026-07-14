@@ -21,7 +21,7 @@
   },
   "bukti2": {
     "prompt": "Tambahkan endpoint GET /healthz yang mengembalikan {\"status\":\"ok\"} status 200.\nIkuti struktur cmd/ + internal/ sesuai CLAUDE.md. Hanya sentuh file yang\ndiperlukan untuk endpoint ini — jangan ubah file lain, jangan tambah dependency.",
-    "output": "● Plan mode — rencana (belum menulis kode):\n  1. internal/health/handler.go — Handler{} → JSON {\"status\":\"ok\"}\n  2. cmd/api/main.go — daftarkan route GET /healthz (chi)\n  [ Approve? ]  › ya\n\n● Updated 2 file:\n  cmd/api/main.go\n  internal/health/handler.go\n✓ ikut struktur cmd/ + internal/ sesuai CLAUDE.md · nol dependency baru"
+    "output": "● Plan mode — rencana (belum menulis kode):\n  1. go.mod + cmd/api/main.go — net/http stdlib\n  2. internal/health/handler.go — JSON {\"status\":\"ok\"}\n  [ Approve? ]  › ya\n\n● Created 3 file:\n  go.mod · cmd/api/main.go\n  internal/health/handler.go\n✓ ikut struktur cmd/ + internal/ sesuai CLAUDE.md · nol dependency"
   },
   "bukti3": {
     "prompt": "/grademe instruktur",
@@ -262,7 +262,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.14;letter-spacin
 
 /* slide 11c · bukti Boris Cherny */
 .s11c .proof{display:flex;flex-direction:column;align-items:center;gap:28px;width:100%}
-.proof-shot{max-width:820px;width:100%;height:auto;border:1px solid #e6e2d8;border-radius:18px;
+.proof-shot{max-width:800px;width:100%;height:auto;border:1px solid #e6e2d8;border-radius:18px;
   box-shadow:0 24px 60px -28px rgba(25,25,25,.35);background:var(--cream)}
 .proof-qr{display:flex;flex-direction:column;align-items:center;gap:12px}
 .proof-qr img{width:132px;height:132px;border:1px solid #e6e2d8;border-radius:14px;
@@ -698,8 +698,9 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.14;letter-spacin
   <section class="slide s16" data-slide>
     <div class="eyebrow">Launch /grademe</div>
     <div class="lbl">Install</div>
-    <div class="cmd"><span class="fl">claude</span> --plugin-dir …/venturo-cc-unleashed/grademe</div>
-    <div class="cols" style="align-items:flex-start;margin-top:60px">
+    <div class="cmd" style="line-height:1.5"><span class="fl">/plugin</span> marketplace add venturo-id/venturo-claude<br><span class="fl">/plugin</span> install grademe@venturo-tools</div>
+    <div style="margin-top:14px;font-size:20px;color:var(--cloudy)">alternatif dev: <span style="font-family:var(--mono)">claude --plugin-dir …/venturo-cc-unleashed/grademe</span></div>
+    <div class="cols" style="align-items:flex-start;margin-top:44px">
       <div class="col" style="flex:0 0 640px">
         <div class="lbl">Cara baca output</div>
         <div class="read-grid">

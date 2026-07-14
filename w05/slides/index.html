@@ -29,7 +29,7 @@
     "output": "● Supabase MCP · project dev\n  → apply_migration   [approve? › ya]\n  ✓ 20260708_create_scores.sql\n      create table scores (…) · RLS enabled\n  → generate_typescript_types   [approve? › ya]\n  ✓ types.ts  (participants, scores)\n✓ tanpa buka dashboard — file dibuat + dikonfirmasi"
   },
   "bukti2": {
-    "output": "● supabase MCP · execute_sql (read_only)  [approve? › ya]\n  2 tabel: participants · scores\n  top-5 total_score:\n    1. andi    96\n    2. budi    91\n    3. citra   88\n    4. dewi    85\n    5. eka     82\n✓ dari data seed — tiap tool call minta izin"
+    "output": "● supabase MCP · execute_sql (read_only)  [approve? › ya]\n  2 tabel: participants · scores\n  top-5 max total_score:\n    1. andi    91\n    2. budi    88\n    3. dewi    82\n    4. hana    80\n    5. fajar   75\n✓ dari data seed — tiap tool call minta izin"
   },
   "bukti3": {
     "tanpa": "● dari ingatan model:\n  conn, _ := pgx.Connect(ctx, dsn)\n  ⚠ pola pgx v4 — bisa\n    usang / campur versi\n  (bukan pgxpool v5)",

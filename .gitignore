@@ -14,6 +14,14 @@
 !.nojekyll
 !index.html
 
+# ── roe: deck Rule of Engagement (pra-sesi, publik) ──
+!roe/
+roe/*
+!roe/slides/
+roe/slides/*
+!roe/slides/index.html
+!roe/slides/img/
+
 # ── deck slide per minggu: izinkan folder, tolak isinya, izinkan slides/ ──
 # (w04 sengaja TIDAK di-whitelist → deck battle w04 tetap LOCAL, soal aman)
 !w01/

@@ -2,10 +2,11 @@
 
 > Diisi 2026-07-03 dari mesin build (macOS, darwin/arm64) + registry resmi.
 > Status verifikasi: ✅ = ter-install & terpakai di mesin build · 📦 = pin dari registry resmi, **belum diuji install di mesin bersih** (H checklist v3.2 — wajib sebelum materi minggu terkait di-rehearse).
+> Re-pin 2026-07-11 (keputusan user): CC 2.1.206 + Go 1.25 — aturan A.6 #4 tetap: semua rehearsal dilakukan di versi pin ini.
 
 | Component | Version | Pinned date | Status | Notes |
 |---|---|---|---|---|
-| Claude Code | 2.1.199 | 2026-07-03 | ✅ | Semua peserta wajib versi sama; cek `claude --version` di w01 |
+| Claude Code | 2.1.206 | 2026-07-11 | ✅ | Semua peserta wajib versi sama; cek `claude --version` di w01 |
 | Model | Sonnet 5 (`claude-sonnet-5`) | 2026-07-03 | ✅ | Baseline peserta (default Claude Code). Opus 4.8 opsional utk yang punya akses. Cek syarat Agent Teams H-7 sebelum Mg 9 |
 | superpowers | 6.1.1 | 2026-07-03 | ✅ | `claude-plugins-official`, commit `6fd4507` |
 | caveman | v1.9.1 | 2026-07-03 | 📦 | `JuliusBrussee/caveman` — install: `/plugin marketplace add JuliusBrussee/caveman` → `/plugin install caveman@caveman` |
@@ -19,7 +20,7 @@
 | Playwright MCP | `@playwright/mcp` 0.0.77 | 2026-07-03 | 📦 | Teaser Mg 5; alternatif plugin `playwright@claude-plugins-official`. Smoke mesin build tertunda (sesi 8) |
 | Vercel MCP | remote `https://mcp.vercel.com` | 2026-07-03 | ✅ | Server remote, versionless — perilaku bisa berubah tanpa bump; WAJIB re-dry-run H-1 sebelum Mg 7 (deploy) |
 | GitHub MCP | remote (plugin `github@claude-plugins-official`) | 2026-07-03 | ✅ | Server remote GitHub official, versionless — re-dry-run H-1 tiap sesi yang memakainya |
-| Go / chi / pgx | Go 1.23.10 / chi v5.3.0 / pgx v5.10.0 | 2026-07-03 | ✅ | chi TERKUNCI di `vibescore-api/go.mod` (Phase 2); pgx menyusul saat s2w5 (Supabase) |
+| Go / chi / pgx | Go 1.25.0 / chi v5.3.0 / pgx v5.10.0 | 2026-07-11 | ✅ | chi TERKUNCI di `vibescore-api/go.mod` (Phase 2); pgx menyusul saat s2w5 (Supabase) |
 | Node / Vite / React | Node v24.10.0 (npm 11.6.0) / Vite 8.1.3 / React 19.2.7 / TS 6.0.3 / Tailwind 4.3.2 | 2026-07-03 | ✅ | TERKUNCI di `vibescore-web/package-lock.json` (scaffold Phase 2, 2026-07-03) |
 
 ## Aturan
