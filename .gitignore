@@ -22,17 +22,12 @@ roe/slides/*
 !roe/slides/index.html
 !roe/slides/img/
 
-# ── deck slide per minggu: izinkan folder, tolak isinya, izinkan slides/ ──
-# (w04 sengaja TIDAK di-whitelist → deck battle w04 tetap LOCAL, soal aman)
+# ── deck slide per minggu: HANYA w01 publik ──
+# (w02–w07 sengaja TIDAK di-whitelist → LOCAL. w04 battle soal aman.)
+# w02/w03/w05 di-limit dari publik (2026-07-15) — kartunya di index.html = "Segera".
 !w01/
-!w02/
-!w03/
-!w05/
 w0*/*
 !w01/slides/
-!w02/slides/
-!w03/slides/
-!w05/slides/
 
 # ── w01: dokumen peserta (exercise + handout + definisi proyek) ──
 !w01/exercise.md
