@@ -39,7 +39,6 @@ w01/assets/*
 # ── _shared: hanya dokumen peserta (bukan doc build-internal) ──
 !_shared/
 _shared/*
-!_shared/silabus-vibe-coding.md
 !_shared/persiapan-peserta.md
 !_shared/versions.md
 !_shared/CLAUDE.md
