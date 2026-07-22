@@ -22,12 +22,14 @@ roe/slides/*
 !roe/slides/index.html
 !roe/slides/img/
 
-# ── deck slide per minggu: HANYA w01 publik ──
-# (w02–w07 sengaja TIDAK di-whitelist → LOCAL. w04 battle soal aman.)
-# w02/w03/w05 di-limit dari publik (2026-07-15) — kartunya di index.html = "Segera".
+# ── deck slide per minggu: w01 + w02 publik ──
+# (w03–w07 sengaja TIDAK di-whitelist → LOCAL. w04 battle soal aman.)
+# w03/w05 masih di-limit dari publik (2026-07-15) — kartunya di index.html = "Segera".
 !w01/
+!w02/
 w0*/*
 !w01/slides/
+!w02/slides/
 
 # ── w01: dokumen peserta (exercise + handout + definisi proyek) ──
 !w01/exercise.md
@@ -36,6 +38,16 @@ w0*/*
 w01/assets/*
 !w01/assets/project-definition.json
 
+# ── w02: dokumen peserta (exercise + handout + panduan + troubleshooting + setup-check) ──
+!w02/exercise.md
+!w02/handout.md
+!w02/panduan-peserta.md
+!w02/troubleshooting.md
+!w02/assets/
+w02/assets/*
+!w02/assets/setup-check.sh
+# runbook.md (materi fasilitator) + slides-outline.md (draft superseded) → LOCAL
+
 # ── _shared: hanya dokumen peserta (bukan doc build-internal) ──
 !_shared/
 _shared/*
@@ -43,6 +55,5 @@ _shared/*
 !_shared/versions.md
 !_shared/CLAUDE.md
 # stage-setup.md + bootstrap-stage.sh → LOCAL (materi pemateri, TAK di-publish)
-!_shared/seed/
 !_shared/templates/
-# build-week-handson.md · deck-engine.md · demo-script-pattern.md → LOCAL (tak di-whitelist)
+# seed/ (dipakai grademe, bukan materi sesi) · build-week-handson.md · deck-engine.md → LOCAL (tak di-whitelist)

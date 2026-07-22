@@ -22,10 +22,13 @@
 | GitHub MCP | remote (plugin `github@claude-plugins-official`) | 2026-07-03 | ✅ | Server remote GitHub official, versionless — re-dry-run H-1 tiap sesi yang memakainya |
 | Go / chi / pgx | Go 1.25.0 / chi v5.3.0 / pgx v5.10.0 | 2026-07-11 | ✅ | chi TERKUNCI di `vibescore-api/go.mod` (Phase 2); pgx menyusul saat s2w5 (Supabase) |
 | Node / Vite / React | Node v24.10.0 (npm 11.6.0) / Vite 8.1.3 / React 19.2.7 / TS 6.0.3 / Tailwind 4.3.2 | 2026-07-03 | ✅ | TERKUNCI di `vibescore-web/package-lock.json` (scaffold Phase 2, 2026-07-03) |
+| Next.js / React / vitest / oxlint / TS / @types/node (survey-app) | Next.js 16.2.10 / React 19.2.x / vitest 3.2.x / oxlint 1.x / TypeScript 5.9.x / @types/node 24.x | 2026-07-18 | ✅ | TERKUNCI di `survey-app/package-lock.json` — repo latihan **w03+** (`ndollem/survey-app`, gantikan vibescore mulai w03; lihat `survey-app-blueprint.md`) |
+| webapp-testing (skill) | tak ber-semver, HEAD ~2026-07-16 | 2026-07-18 | 📦 | Marketplace `anthropic-agent-skills`, plugin `example-skills` — **belum diuji mesin bersih**. Butuh `python3` + `playwright` (`python3 -m pip install playwright && python3 -m playwright install chromium`). Dipakai w03 blok 7 (E2E + a11y) |
 
 ## Aturan
 
 1. **Version bump ⇒ re-rehearse** semua demo yang menyentuh komponen itu (A.6 #4).
-2. Komponen 📦 belum lolos uji "mesin bersih" — jalankan H checklist v3.2 (install dari nol, catat waktu & prompt izin) sebelum minggu pemakaiannya. Prioritas: caveman + ponytail + **gstack** (w02 — gstack masuk scope w02 sejak revisi 2026-07-05), ui-ux-pro-max (w07), Supabase/Context7/Playwright MCP (w05).
+2. Komponen 📦 belum lolos uji "mesin bersih" — jalankan H checklist v3.2 (install dari nol, catat waktu & prompt izin) sebelum minggu pemakaiannya. Prioritas: caveman + ponytail + **gstack** (w02 — gstack masuk scope w02 sejak revisi 2026-07-05), ui-ux-pro-max (w07), Supabase/Context7/Playwright MCP (w05), **webapp-testing (w03)**.
 3. Server MCP **remote** (Vercel, GitHub) tidak bisa di-pin — mitigasi: dry-run H-1 + fallback statis `[BUKTI-n]` (A.6 #6, revisi 2026-07-05: tanpa rekaman video).
 4. chi/pgx/Vite/React di-pin final lewat lockfile repo vibescore saat Phase 2; angka di sini = target scaffold.
+5. **Repo latihan per minggu (jangan campur):** w02 tetap `ndollem/vibescore-api` (Go/chi, tag `s1w1..s2w7`) — TIDAK berubah. w03 dan seterusnya pakai repo baru `ndollem/survey-app` (Next.js, tag `s1w3-start/-end`); vibescore-api tidak dihapus/direplace, hanya tidak dipakai lagi mulai w03.

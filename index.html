@@ -59,6 +59,13 @@ a.cell:hover{transform:translateY(-6px);box-shadow:0 20px 40px -22px rgba(217,11
 .cell.soon .badge{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   color:#8a867b;background:#e9e5db;border-radius:999px;padding:4px 12px;align-self:flex-start}
 
+/* ── month group label ──────────────────────────────────── */
+.mlabel{font-family:var(--sans);font-size:17px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--crail);margin:52px 0 0;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.mlabel::before{content:"";width:38px;height:2px;background:var(--terracotta);align-self:center}
+.mlabel .mnote{font-weight:500;letter-spacing:.02em;text-transform:none;color:#8a867b;font-size:15px}
+.cal.grp{margin-top:20px}
+
 /* ── shared references ──────────────────────────────────── */
 .shared{margin-top:68px;padding-top:44px;border-top:1px solid #e0dccf}
 .shared .eyebrow{margin-bottom:26px}
@@ -85,9 +92,9 @@ a.cell:hover{transform:translateY(-6px);box-shadow:0 20px 40px -22px rgba(217,11
 <body>
 <div class="wrap">
 
-  <div class="eyebrow">Peta 12 minggu · 7 primitives + 3 battle</div>
-  <h1>Claude Code <span class="hl">Unleashed</span><br>— Materi Mingguan</h1>
-  <div class="sub">Navigasi deck slide tiap minggu. Klik kartu untuk membuka presentasi minggu tersebut.</div>
+  <div class="eyebrow">Peta 8 sesi · 2 bulan hands-on · 6 materi + 2 battle</div>
+  <h1>Claude Code <span class="hl">Unleashed</span><br>— Materi Per Sesi</h1>
+  <div class="sub">Kurikulum v4: praktek sendiri di laptop, slide = panduan. Klik kartu untuk membuka deck sesi tersebut.</div>
 
   <!-- ══ pra-sesi ═════════════════════════════════════════════ -->
   <div class="cal" style="grid-template-columns:1fr;margin-top:40px">
@@ -97,32 +104,32 @@ a.cell:hover{transform:translateY(-6px);box-shadow:0 20px 40px -22px rgba(217,11
       <div class="go">Buka slide</div></a>
   </div>
 
-  <!-- ══ grid 12 minggu ═══════════════════════════════════════ -->
-  <div class="cal">
-    <a class="cell" href="w01/slides/index.html"><div class="wk">Mg 1</div><div class="nm">CLAUDE.md</div><div class="go">Buka slide</div></a>
-    <a class="cell soon" href="#"><div class="wk">Mg 2</div><div class="nm">Skills</div><div class="badge">Segera</div></a>
-    <a class="cell soon" href="#"><div class="wk">Mg 3</div><div class="nm">Subagents</div><div class="badge">Segera</div></a>
-    <a class="cell soon bat" href="#"><div class="wk">Mg 4</div><div class="nm">⚔ Battle 1</div><div class="badge">Segera</div></a>
-    <a class="cell soon" href="#"><div class="wk">Mg 5</div><div class="nm">MCP</div><div class="badge">Segera</div></a>
+  <!-- ══ BULAN 1 · fondasi → bukti ════════════════════════════ -->
+  <div class="mlabel">Bulan 1 <span class="mnote">Fondasi → Bukti · 3 materi + 1 battle</span></div>
+  <div class="cal grp">
+    <a class="cell" href="w01/slides/index.html"><div class="wk">Sesi 1</div><div class="nm">CLAUDE.md</div><div class="go">Buka slide</div></a>
+    <a class="cell" href="w02/slides/index.html"><div class="wk">Sesi 2</div><div class="nm">Arsenal Skills #1</div><div class="go">Buka slide</div></a>
+    <a class="cell soon" href="#"><div class="wk">Sesi 3</div><div class="nm">QA &amp; Testing</div><div class="badge">Segera</div></a>
+    <a class="cell soon bat" href="#"><div class="wk">Sesi 4</div><div class="nm">⚔ Battle #1</div><div class="badge">Segera</div></a>
+  </div>
 
-    <a class="cell soon" href="#"><div class="wk">Mg 6</div><div class="nm">Hooks</div><div class="badge">Segera</div></a>
-    <a class="cell soon" href="#"><div class="wk">Mg 7</div><div class="nm">Plugins</div><div class="badge">Segera</div></a>
-    <a class="cell soon bat" href="#"><div class="wk">Mg 8</div><div class="nm">⚔ Battle 2</div><div class="badge">Segera</div></a>
-    <a class="cell soon" href="#"><div class="wk">Mg 9</div><div class="nm">Agent Teams</div><div class="badge">Segera</div></a>
-    <a class="cell soon" href="#"><div class="wk">Mg 10</div><div class="nm">Security</div><div class="badge">Segera</div></a>
-    <a class="cell soon" href="#"><div class="wk">Mg 11</div><div class="nm">Token &amp; Second Brain</div><div class="badge">Segera</div></a>
-    <a class="cell soon bat" href="#"><div class="wk">Mg 12</div><div class="nm">⚔ Battle Final</div><div class="badge">Segera</div></a>
+  <!-- ══ BULAN 2 · integrasi → otonomi ════════════════════════ -->
+  <div class="mlabel">Bulan 2 <span class="mnote">Integrasi → Otonomi · 3 materi + 1 battle</span></div>
+  <div class="cal grp">
+    <a class="cell soon" href="#"><div class="wk">Sesi 5</div><div class="nm">Arsenal MCP #2</div><div class="badge">Segera</div></a>
+    <a class="cell soon" href="#"><div class="wk">Sesi 6</div><div class="nm">Token &amp; 2nd Brain</div><div class="badge">Segera</div></a>
+    <a class="cell soon" href="#"><div class="wk">Sesi 7</div><div class="nm">Loop &amp; Arsenal #3</div><div class="badge">Segera</div></a>
+    <a class="cell soon bat" href="#"><div class="wk">Sesi 8</div><div class="nm">⚔ Battle Final</div><div class="badge">Segera</div></a>
   </div>
 
   <!-- ══ shared references ════════════════════════════════════ -->
   <div class="shared">
     <div class="eyebrow">Shared references · <span style="text-transform:none;letter-spacing:0;font-weight:500;color:#5f5b52">_shared/</span></div>
     <div class="chips">
-      <a class="chip" href="_shared/persiapan-peserta.md">🚀 persiapan-peserta.md</a>
       <a class="chip" href="_shared/versions.md">versions.md</a>
-      <a class="chip" href="_shared/seed/seed.sql"><span class="dir">seed/</span>seed.sql</a>
       <a class="chip" href="_shared/templates/CLAUDE-go-template.md"><span class="dir">templates/</span>CLAUDE-go-template.md</a>
       <a class="chip" href="_shared/templates/CLAUDE-react-template.md"><span class="dir">templates/</span>CLAUDE-react-template.md</a>
+      <a class="chip" href="_shared/CLAUDE.md"><span class="dir">Boris Cherny </span>CLAUDE.md</a>      
     </div>
   </div>
 
