@@ -35,7 +35,7 @@ npm install      # Node 20+ (disarankan Node 24, sama seperti pin versions.md)
   setup ulang.
 
 > Subagent `test-writer`/`code-reviewer` + quality-gate hook SUDAH DIBUNDEL di `survey-app/assets/` —
-> peserta `cp` ke `.claude/` saat sesi jalan, **bukan** bagian prasyarat H-7.
+> peserta `cp` ke `.claude/` sebagai bagian prasyarat H-7 (idempotent — diulang saat sesi tak masalah).
 
 ## 2. Mulai dari titik awal minggu
 Tiap minggu punya tag mulai `-start` dan kunci jawaban `-end`:

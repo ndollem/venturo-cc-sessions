@@ -22,31 +22,35 @@ roe/slides/*
 !roe/slides/index.html
 !roe/slides/img/
 
-# ── deck slide per minggu: w01 + w02 publik ──
-# (w03–w07 sengaja TIDAK di-whitelist → LOCAL. w04 battle soal aman.)
-# w03/w05 masih di-limit dari publik (2026-07-15) — kartunya di index.html = "Segera".
+# ── deck slide per minggu: w01 + w02 + w03 publik ──
+# Aturan sejak 2026-07-29: yang dipublikasikan HANYA folder slides/ dan assets/.
+# SELURUH dokumen .md milik minggu (exercise · handout · panduan-peserta ·
+# troubleshooting · slides-outline · runbook · penjelasan) → LOCAL, tanpa kecuali.
+# (w04–w07 sengaja TIDAK di-whitelist → LOCAL. w04 battle soal aman.)
 !w01/
 !w02/
+!w03/
 w0*/*
 !w01/slides/
 !w02/slides/
+!w03/slides/
 
-# ── w01: dokumen peserta (exercise + handout + definisi proyek) ──
-!w01/exercise.md
-!w01/handout.md
+# w03: hanya deck final — arsip & backup TIDAK ikut publik
+w03/slides/*
+!w03/slides/index.html
+
+# ── assets: hanya berkas yang benar-benar dipakai peserta ──
 !w01/assets/
 w01/assets/*
 !w01/assets/project-definition.json
-
-# ── w02: dokumen peserta (exercise + handout + panduan + troubleshooting + setup-check) ──
-!w02/exercise.md
-!w02/handout.md
-!w02/panduan-peserta.md
-!w02/troubleshooting.md
 !w02/assets/
 w02/assets/*
 !w02/assets/setup-check.sh
-# runbook.md (materi fasilitator) + slides-outline.md (draft superseded) → LOCAL
+
+# ── penolakan terakhir: nol .md di seluruh deck mingguan ──
+# Sengaja ditaruh paling bawah supaya menang atas whitelist folder slides/ di atas
+# (mis. w01/slides/bukti/README.md — catatan build deck, bukan materi peserta).
+w0*/**/*.md
 
 # ── _shared: hanya dokumen peserta (bukan doc build-internal) ──
 !_shared/
