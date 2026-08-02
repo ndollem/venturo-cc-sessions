@@ -1,5 +1,43 @@
 # Persiapan Peserta — Sebelum Sesi
 
+> **Season 2 (w05–w08) dimulai — baca §S2 di bawah lebih dulu.**
+> Bagian §1–§3 di halaman ini adalah persiapan **Season 1 (w01–w04)**; tetap disimpan sebagai
+> rujukan bagi yang menyusul materi lama, **tapi bukan prasyarat Season 2.**
+
+## §S2 — Persiapan Season 2 (mulai w05 "Arsenal MCP")
+
+**Tidak ada prasyarat H-7 untuk w05.** Setup dikerjakan **saat sesi berlangsung**, paralel dengan
+segmen pembuka (§0 dijatah 15 menit — cukup untuk clone + install). Yang perlu kamu pastikan
+sebelum datang cuma tiga hal:
+
+| Yang dicek | Perintah | Kenapa |
+|---|---|---|
+| Claude Code versi seragam | `claude --version` | pin ada di `versions.md` |
+| Node + npm | `node --version && npm --version` | repo latihan w05 = Vite + React |
+| **Disk kosong ≥ 10 GB** | `df -h /` | `npx` playwright + chrome-devtools + image Docker dipasang saat sesi; di satu dry-run disk penuh menghentikan seluruh kelas |
+
+**Repo latihan w05** (di-clone saat sesi, bukan sebelumnya):
+```bash
+git clone https://github.com/ndollem/venturo-benefit-survey.git
+```
+
+**Satu-satunya yang enak disiapkan lebih dulu — GitHub PAT.** Membuat token barengan 30 orang itu
+lambat dan memakan jatah praktek:
+github.com → Settings → Developer settings → **Personal access tokens (classic)** → Generate new
+token → centang **`public_repo`** + **`read:org`** → copy. Semua repo yang dipakai hari itu publik,
+jadi `public_repo` sudah cukup; pilih `repo` penuh **hanya** kalau kamu berniat memakainya untuk
+repo kerjamu — sadari itu memberi akses baca-tulis ke seluruh repo privatmu. **Masa berlaku 30 hari,
+cabut setelah dipakai.**
+
+> **Yang TIDAK perlu kamu siapkan untuk w05:** akun Supabase, service account Google Cloud, API key
+> Context7, Docker. Ketiga segmen yang memakainya (§4 Sheets→Postgres, §5 Context7+Docker, §6
+> security) dijalankan **presenter di layar depan** — kamu menonton dan ikut diskusi. Segmen yang
+> kamu ketik sendiri (§1–§3.5, §7) cuma butuh GitHub PAT + repo latihan di atas.
+
+---
+
+## Season 1 (w01–w04) — arsip persiapan
+
 > Siapkan ini **sebelum minggu 1**. ±10 menit. Ini yang bikin kamu bisa **ikut mengetik**
 > tiap langkah demo di mesinmu sendiri, bukan cuma menonton.
 
@@ -86,13 +124,14 @@ Uji: buka `claude` di `vibescore-api`, ketik `/grademe nama-kamu` setelah sesi k
 JSON skor + baris upload `201 Created`. Bawa skormu tiap minggu (Challenge Besok Pagi). Token
 kadaluarsa/salah → `401` saat upload, lihat `troubleshooting.md` minggu berjalan.
 
-## 4. Prasyarat sesi lanjutan (w05–w07)
+## 4. Prasyarat sesi lanjutan (w06–w07)
 > ⚠️ **Draft** — minggu ini belum dibangun; detail berikut mengikuti `curriculum-v4-plan.md` dan bisa
 > berubah saat sesi benar-benar dibuild (patuhi pengumuman H-7 resmi tiap minggu di atas draft ini).
+>
+> **w05 sudah dibangun — prasyaratnya ada di §S2 di atas, bukan di sini.** Rencana lama
+> ("akun Supabase + `project_ref` per peserta, WAJIB H-7") **dibatalkan**: segmen Supabase kini
+> presenter-led, jadi peserta tak perlu menyiapkan apa pun selain GitHub PAT.
 
-- **w05 (Arsenal MCP) — WAJIB H-7:** akun Supabase + 1 project pribadi dibuat + catat `project_ref`-nya
-  (dari URL dashboard project). Dipakai `claude mcp add --transport http ... project_ref=<ref-mu>`,
-  jadi harus sudah ada **sebelum** sesi — tak bisa dibuat on-the-spot.
 - **w06 (Token Economy, Memory & 2nd Brain):** `uv` terpasang (`uv --version`; dipakai
   `uv tool install graphifyy`). Obsidian (app) terpasang + 1 vault kosong siap dipakai (folder
   `decisions/` & `knowledge/` disiapkan saat sesi).
