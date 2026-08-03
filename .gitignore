@@ -26,14 +26,21 @@ roe/slides/*
 # Aturan sejak 2026-07-29: yang dipublikasikan HANYA folder slides/ dan assets/.
 # SELURUH dokumen .md milik minggu (exercise · handout · panduan-peserta ·
 # troubleshooting · slides-outline · runbook · penjelasan) → LOCAL, tanpa kecuali.
-# (w04–w07 sengaja TIDAK di-whitelist → LOCAL. w04 battle soal aman.)
+# (w05–w07 sengaja TIDAK di-whitelist → LOCAL. w04 soal battle tetap LOCAL:
+#  yang publik HANYA deck pre-battle H-1 di w04/slides-prebattle/.)
 !w01/
 !w02/
 !w03/
+!w04/
 w0*/*
 !w01/slides/
 !w02/slides/
 !w03/slides/
+
+# w04: HANYA deck persiapan H-1 (tool·database·skill). slides/ battle & soal → LOCAL
+!w04/slides-prebattle/
+w04/slides-prebattle/*
+!w04/slides-prebattle/index.html
 
 # w03: hanya deck final — arsip & backup TIDAK ikut publik
 w03/slides/*
