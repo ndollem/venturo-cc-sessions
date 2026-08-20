@@ -1,0 +1,1849 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Code Unleashed · Season 2 · Minggu 2 · Token, Ingatan &amp; Second Brain</title>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- ═══ w06 · DECK ═══                                                    -->
+<!-- Mesin = klon w05/slides/index.html (palet, fit(), fragment). Tanpa overlay, tanpa klik. -->
+<!-- Isi   = w06/panduan-peserta.md v7.2 (SSOT) + dry-run-report.md §9–§10 -->
+<!--                                                                      -->
+<!-- 🔒 ATURAN ISI TERMINAL:                                              -->
+<!--   Semua "cmd" dan "out" di blok JSON #term-data adalah SALINAN dari   -->
+<!--   Expected Output panduan (semuanya sudah ✅ diverifikasi di dry run  -->
+<!--   12–13 Agu 2026). TIDAK ADA output karangan. Kalau sebuah langkah    -->
+<!--   belum punya output terverifikasi, slotnya dikosongkan — bukan       -->
+<!--   ditambal.                                                           -->
+<!--   Output dipangkas ke baris yang membawa ANCHOR; pemangkasan          -->
+<!--   ditandai `…` seperti di panduan.                                    -->
+<!--   Baris yang diawali `»` di "out" = baris yang disorot (jangan        -->
+<!--   diketik peserta, itu penanda deck).                                 -->
+<!--                                                                      -->
+<!-- 🔒 KREDENSIAL: tidak boleh ada token/PAT/project_ref/API key nyata.   -->
+<!-- Model-agnostik: tidak ada nama model AI di file ini.                  -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<style>
+:root{
+  --ivory:#F4F3EE;
+  --cream:#FAF9F5;
+  --terracotta:#D97757;
+  --crail:#C15F3C;
+  --ink:#191919;
+  --cloudy:#B1ADA1;
+  --tan:#D4A27F;
+  --term-bg:#1F1E1D;
+  --term-fg:#F4F3EE;
+
+  --serif:"New York","Iowan Old Style",Georgia,serif;
+  --sans:-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"SF Mono",Menlo,Consolas,monospace;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--ivory);overflow:hidden}
+body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* ── stage & scaling ─────────────────────────────────────────── */
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ivory)}
+#stage{
+  position:relative;width:1920px;height:1080px;flex:0 0 auto;
+  transform-origin:center center;
+  background:var(--ivory);overflow:hidden;
+  box-shadow:0 40px 120px -40px rgba(25,25,25,.35);
+}
+
+/* ── ambient blobs (parallax per slide) ──────────────────────── */
+#blobs{position:absolute;inset:-20%;z-index:0;pointer-events:none;
+  transition:transform 1.1s cubic-bezier(.22,.61,.36,1);filter:blur(8px)}
+#blobs::before,#blobs::after{content:"";position:absolute;border-radius:50%}
+#blobs::before{width:900px;height:900px;left:-6%;top:-14%;
+  background:radial-gradient(circle at 40% 40%,rgba(217,119,87,.16),transparent 62%)}
+#blobs::after{width:820px;height:820px;right:-8%;bottom:-16%;
+  background:radial-gradient(circle at 55% 45%,rgba(212,162,127,.16),transparent 60%)}
+
+/* ── slides ──────────────────────────────────────────────────── */
+.slide{
+  position:absolute;inset:0;z-index:1;display:none;
+  flex-direction:column;justify-content:center;
+  padding:104px 130px;
+}
+.slide.active{display:flex;animation:slideEnter .55s cubic-bezier(.22,.61,.36,1) both}
+@keyframes slideEnter{from{opacity:0}to{opacity:1}}
+.slide.dense{padding:56px 78px;justify-content:center}
+
+.eyebrow{font-family:var(--sans);font-size:22px;font-weight:600;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--crail);margin-bottom:26px;display:flex;align-items:center;gap:20px}
+.eyebrow::before{content:"";width:52px;height:2px;background:var(--terracotta);flex-shrink:0}
+.eyebrow.plain::before{display:none}
+.eyebrow .lc{text-transform:none;letter-spacing:0}
+.eyebrow .sp{margin-left:auto;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.eyebrow .pg{font-family:var(--mono);font-size:17px;font-weight:600;letter-spacing:.04em;
+  text-transform:none;color:#8a867b;background:var(--cream);border:1px solid #e6e2d8;
+  padding:7px 16px;border-radius:100px}
+.eyebrow .tb{background:var(--terracotta);color:#fff;font-family:var(--sans);
+  font-size:17px;font-weight:700;letter-spacing:.14em;padding:8px 20px;border-radius:100px}
+.eyebrow .tb.st{background:#8a867b}
+
+/* ═══ BADGE SIAPA MENGETIK — baru di w05, sudut kanan atas kartu ═ */
+.who{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);
+  font-size:20px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:10px 22px;border-radius:100px;line-height:1;white-space:nowrap}
+.who.you{background:var(--terracotta);color:#fff;box-shadow:0 10px 26px -14px rgba(193,95,60,.9)}
+.who.watch{background:#3C3A35;color:#EDE9DE}
+.who .ic{font-size:22px;letter-spacing:0}
+
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.14;letter-spacing:-.015em;text-wrap:balance}
+.lead{font-family:var(--sans);font-size:30px;line-height:1.5;color:#3a3a38;max-width:1180px}
+.muted{color:var(--cloudy)}
+.accent{color:var(--terracotta)}
+.accent-d{color:var(--crail)}
+.hl{color:var(--terracotta)}
+.h2{font-size:76px;margin-bottom:14px}
+.h2.sm{font-size:60px}
+
+/* fragments */
+.fragment{opacity:0;transform:translateY(24px);
+  transition:opacity .6s ease,transform .6s cubic-bezier(.22,.61,.36,1)}
+.fragment.revealed{opacity:1;transform:none}
+.fragment.pop{transform:scale(.7);transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1)}
+.fragment.pop.revealed{transform:scale(1)}
+
+/* stagger utility */
+.stagger>*{opacity:0;transform:translateY(24px)}
+.slide.active .stagger>*{animation:rise .6s cubic-bezier(.22,.61,.36,1) both}
+@keyframes rise{to{opacity:1;transform:none}}
+
+.kbd{font-family:var(--mono);font-size:.85em;background:#eae7de;border:1px solid #d9d5c9;
+  border-radius:8px;padding:3px 12px;color:var(--ink)}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* ═══ BADGE TEMPAT MENGETIK — wajib di SETIAP blok kode ═════════ */
+/* ═══════════════════════════════════════════════════════════════ */
+.wb{display:inline-flex;align-items:center;flex-shrink:0;
+  font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;padding:6px 14px;border-radius:8px;line-height:1.2}
+.wb.t{background:#2E6F8E;color:#fff}                       /* TERMINAL  — jendela hitam */
+.wb.c{background:var(--terracotta);color:#fff}             /* KE CLAUDE — di dalam sesi claude */
+.wb.r{background:#4C4842;color:#DDD8CD}                    /* BACA SAJA — contoh keluaran */
+.wb.sm{font-size:13px;padding:5px 11px;letter-spacing:.1em}
+
+/* ── frame terminal / blok kode (satu komponen untuk semua) ───── */
+.term{background:var(--term-bg);border-radius:16px;overflow:hidden;position:relative;
+  box-shadow:0 34px 80px -30px rgba(25,25,25,.6),0 0 0 1px rgba(255,255,255,.04);
+  color:var(--term-fg);font-family:var(--mono)}
+.term-bar{display:flex;align-items:center;gap:13px;padding:12px 20px;
+  background:#2a2927;border-bottom:1px solid rgba(255,255,255,.05)}
+.dot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+.term-title{font-size:17px;color:#8f8b82;letter-spacing:.02em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.ex{margin-left:auto;flex-shrink:0;font-family:var(--sans);font-size:14px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--tan);
+  background:rgba(217,119,87,.14);border:1px solid rgba(212,162,127,.38);
+  padding:5px 13px;border-radius:100px}
+.term-body{padding:24px 30px;font-size:20px;line-height:1.5;
+  max-height:540px;overflow-y:auto;overflow-x:hidden}
+.term-line{display:flex;gap:14px;align-items:flex-start;white-space:pre-wrap;
+  word-break:break-word;overflow-wrap:anywhere}
+.prompt-mark{color:var(--terracotta);font-weight:700;flex-shrink:0}
+.term-out{margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);
+  color:#cfcdc5;white-space:pre-wrap;font-size:18px;line-height:1.5;
+  word-break:break-word;overflow-wrap:anywhere}
+.type.typing::after{content:"▋";color:var(--terracotta);animation:blink 1s steps(1) infinite;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+/* blok kode statis (bukan slot bukti) — badge tetap wajib */
+.term.mini .term-body{padding:18px 22px;font-size:18px;line-height:1.55;max-height:none;
+  white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
+.term.mini .term-bar{padding:9px 16px}
+.term.tiny .term-body{padding:14px 18px;font-size:16px;line-height:1.55;max-height:none;
+  white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
+.term.tiny .term-bar{padding:8px 14px}
+.term .cm{color:#8a867b}
+.term .ok{color:#7fbf82}
+.term .fl{color:var(--terracotta)}
+.term .ky{color:var(--tan)}
+
+/* placeholder — teks polos (kalau presenter mengosongkan field) */
+.ph{display:flex;align-items:center;justify-content:center;padding:26px;text-align:center;
+  color:var(--cloudy);min-height:110px}
+.ph.dark{color:#7d7a72}
+.ph-sub{font-family:var(--mono);font-size:19px;letter-spacing:.02em;opacity:.85}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* ═══ KARTU-MCP (slot bukti) — varian kartu-qa w03 ══════════════ */
+/* ═══════════════════════════════════════════════════════════════ */
+.kq{align-items:flex-start;justify-content:center;padding:46px 74px 48px}
+.kq .eyebrow{width:100%;margin-bottom:16px}
+.card-name{font-family:var(--serif);font-size:48px;line-height:1.06;letter-spacing:-.02em;
+  margin-bottom:8px}
+.card-name .sub{font-size:25px;color:var(--cloudy);font-family:var(--mono);letter-spacing:0;font-weight:400}
+/* baris server + transport — tambahan khas w05 */
+.srv{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px}
+.srv .sv{font-family:var(--mono);font-size:17px;background:var(--cream);border:1px solid #e6e2d8;
+  border-radius:100px;padding:7px 15px;color:#4a4a48}
+.srv .sv b{color:var(--crail);font-weight:600}
+.srv .sv.tp{background:#EFE3DC;border-color:#e3cdc2}
+.srv .sv.fd{background:#2E2C2A;border-color:#2E2C2A;color:#EDE9DE}
+.srv .sv.fd b{color:var(--tan)}
+.srv .sv.fd i{color:#a8a49a;font-style:normal}
+.kq-cols{display:flex;gap:44px;width:100%;align-items:stretch}
+.kq-l{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.kq-r{flex:0 0 880px;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.card-line{display:flex;gap:16px;align-items:flex-start;font-size:22px;line-height:1.42;
+  color:#3a3a38;margin:0 0 14px}
+.card-line b{color:var(--ink)}
+.card-line code{font-family:var(--mono);font-size:.9em;background:#eae7de;border-radius:6px;padding:2px 8px}
+.card-tag{flex-shrink:0;font-family:var(--sans);font-size:14px;font-weight:700;
+  letter-spacing:.1em;padding:6px 12px;border-radius:8px;margin-top:3px}
+.card-tag.ok{background:#e7efe5;color:#4a7c4e}
+.card-tag.no{background:#f6e4dd;color:var(--crail)}
+.card-tag.nt{background:#eae7de;color:#6d6a63}
+
+/* strip anchor — kontrak blok ini */
+.anchor{display:flex;gap:15px;align-items:flex-start;margin-top:15px;
+  background:#EFE3DC;border-left:6px solid var(--terracotta);border-radius:10px;
+  padding:13px 20px;font-size:20px;line-height:1.4;color:#3a3a38}
+.anchor .ck{color:#4a7c4e;font-weight:800;flex-shrink:0;font-size:23px;line-height:1.3}
+.anchor b{color:var(--ink)}
+.anchor code{font-family:var(--mono);font-size:.9em;background:rgba(255,255,255,.6);
+  border-radius:6px;padding:2px 8px}
+.anchor .lb{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--crail);display:block;margin-bottom:5px}
+.beda{margin-top:10px;font-size:17px;line-height:1.38;color:#8a867b}
+.beda b{color:var(--crail);font-weight:600}
+.beda code{font-family:var(--mono);font-size:.92em}
+.barusan{margin-top:13px;font-family:var(--serif);font-style:italic;font-size:21px;
+  line-height:1.38;color:#4a4a48}
+.barusan b{color:var(--terracotta);font-style:normal}
+.tugasqa{margin-top:14px;background:#E7EFE5;border-radius:12px;padding:13px 18px;
+  font-size:20px;line-height:1.4;color:#3d5540}
+.tugasqa .h{display:block;font-family:var(--sans);font-size:15px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#4a7c4e;margin-bottom:5px}
+.tugasqa b{color:#25361f}
+.tugasqa code{font-family:var(--mono);font-size:.9em;background:rgba(255,255,255,.65);
+  border-radius:6px;padding:2px 8px}
+.warnbox{margin-top:14px;background:#F6E4DD;border-radius:12px;padding:13px 18px;
+  font-size:20px;line-height:1.4;color:#5a3b30}
+.warnbox .h{display:block;font-family:var(--sans);font-size:15px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--crail);margin-bottom:5px}
+.warnbox b{color:#3a2019}
+.warnbox code{font-family:var(--mono);font-size:.9em;background:rgba(255,255,255,.6);
+  border-radius:6px;padding:2px 8px}
+.infobox{margin-top:14px;background:var(--cream);border:1px solid #e6e2d8;border-radius:12px;
+  padding:13px 18px;font-size:19px;line-height:1.42;color:#3a3a38}
+.infobox .h{display:block;font-family:var(--sans);font-size:15px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--crail);margin-bottom:5px}
+.infobox b{color:var(--ink)}
+.infobox code{font-family:var(--mono);font-size:.9em;background:#eae7de;border-radius:6px;padding:2px 8px}
+.note-s{margin-top:14px;font-size:19px;line-height:1.45;color:#6d6a63}
+.note-s b{color:var(--ink)}
+.note-s code{font-family:var(--mono);font-size:.9em;background:#eae7de;border-radius:6px;padding:2px 7px}
+.blk-lbl{display:block;font-family:var(--sans);font-size:15px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--crail);margin:16px 0 8px}
+
+/* beat diskusi — pertanyaan besar */
+.beat{margin-top:15px;background:#2E2C2A;border-radius:14px;padding:16px 22px;color:#EDE9DE}
+.beat .h{display:block;font-family:var(--sans);font-size:14px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--tan);margin-bottom:7px}
+.beat .q{font-family:var(--serif);font-size:27px;line-height:1.3}
+.beat .q b{color:var(--terracotta)}
+.beat .a{margin-top:9px;font-size:18px;line-height:1.42;color:#b8b4aa}
+.beat .a b{color:#EDE9DE}
+
+.chip-row{display:flex;align-items:center;gap:18px;margin-top:14px;flex-wrap:wrap}
+.chip-why{font-size:18px;color:#8a867b;line-height:1.35}
+
+/* ═══ tabel generik (transport · scope · statistik · jebakan) ═══ */
+.tbl{display:flex;flex-direction:column;gap:7px;width:100%}
+.tbl .tr{display:grid;gap:18px;align-items:start;background:var(--cream);
+  border:1px solid #e6e2d8;border-radius:10px;padding:12px 18px;
+  box-shadow:0 8px 22px -18px rgba(25,25,25,.4)}
+.tbl .tr.head{background:transparent;border:none;box-shadow:none;padding:0 18px 2px}
+.tbl .tr.head span{font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--crail)}
+.tbl .tr.hi{background:#fff;border-color:var(--terracotta)}
+.tbl .k,.tbl .v{min-width:0;overflow-wrap:anywhere}
+.tbl .k{font-family:var(--mono);font-size:19px;font-weight:600;color:var(--ink);line-height:1.32}
+.tbl .k.sm{font-size:17px}
+.tbl .v{font-size:18px;color:#3a3a38;line-height:1.38}
+.tbl .v b{color:var(--ink)}
+.tbl .v i{color:#6d6a63}
+.tbl .v code,.tbl .k code{font-family:var(--mono);font-size:.92em;background:#eae7de;
+  border-radius:6px;padding:2px 7px}
+.tbl .v .no{color:var(--crail);font-weight:600}
+
+/* ═══ slide 1 · cover ═══════════════════════════════════════════ */
+.s01 .kicker{font-family:var(--sans);font-size:26px;font-weight:600;letter-spacing:.34em;
+  text-transform:uppercase;color:var(--crail);margin-bottom:44px}
+.s01 h1{font-size:118px;line-height:1.12;max-width:1620px}
+.underline-draw{position:relative}
+.underline-draw .pct{color:var(--terracotta);position:relative;display:inline-block}
+.underline-draw svg{position:absolute;left:-3%;bottom:-16px;width:106%;height:26px;overflow:visible}
+.underline-draw path{fill:none;stroke:var(--terracotta);stroke-width:9;stroke-linecap:round;
+  stroke-dasharray:1200;stroke-dashoffset:1200}
+.slide.active .underline-draw path{animation:draw 1.1s .5s cubic-bezier(.6,0,.35,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.s01 .sub{margin-top:58px;font-size:40px;color:#3a3a38}
+.s01 .sub b{color:var(--ink);font-weight:600}
+.s-cover-meta{margin-top:38px;font-family:var(--mono);font-size:24px;color:var(--crail)}
+.s-cover-foot{margin-top:20px;font-size:26px;color:#4a4a48;max-width:1500px;line-height:1.45}
+.s-cover-foot b{color:var(--ink);font-weight:600}
+
+/* ═══ slide 2 · kartu-kamus ═════════════════════════════════════ */
+.kamus-cols{display:flex;gap:44px;width:100%;align-items:flex-start}
+.kamus-l{flex:0 0 690px;min-width:0}
+.kamus-r{flex:1 1 0;min-width:0}
+.tt-outer{background:var(--term-bg);border-radius:16px;padding:18px 20px;color:var(--term-fg);
+  box-shadow:0 30px 70px -34px rgba(25,25,25,.6)}
+.tt-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.tt-head .lbl{font-family:var(--sans);font-size:16px;color:#8f8b82;letter-spacing:.06em}
+.tt-cmds{font-family:var(--mono);font-size:19px;color:#cfcdc5;line-height:1.5}
+.tt-cmds b{color:var(--tan);font-weight:600}
+.tt-arrow{font-family:var(--sans);font-size:17px;color:var(--tan);margin:10px 0 9px}
+.tt-inner{background:#2E2C2A;border:1px solid rgba(255,255,255,.10);border-radius:12px;
+  padding:15px 18px}
+.tt-inner .tt-cmds{font-size:18px}
+.tt-note{margin-top:7px;font-family:var(--mono);font-size:15px;color:#8f8b82}
+.legend{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+.legend .lr{display:flex;align-items:flex-start;gap:14px;font-size:18px;color:#3a3a38;line-height:1.38}
+.legend .lr b{color:var(--ink)}
+.kamus-line{margin-top:14px;background:#F6E4DD;border-radius:12px;padding:12px 16px;
+  font-size:19px;line-height:1.42;color:#5a3b30}
+.kamus-line b{color:#3a2019}
+.kamus-line code{font-family:var(--mono);font-size:.92em;background:rgba(255,255,255,.6);
+  border-radius:6px;padding:2px 7px}
+.gloss{display:flex;flex-direction:column;gap:6px}
+.gloss .gr{display:flex;gap:18px;align-items:baseline;background:var(--cream);
+  border:1px solid #e6e2d8;border-radius:10px;padding:9px 18px}
+.gloss .gk{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--crail);
+  flex:0 0 200px;line-height:1.32}
+.gloss .gv{font-size:17px;color:#3a3a38;line-height:1.36}
+.gloss .gv b{color:var(--ink)}
+.gloss .gv i{color:#6d6a63}
+.anchor-def{margin-top:14px;background:#EFE3DC;border-left:6px solid var(--terracotta);
+  border-radius:10px;padding:13px 18px;font-size:19px;color:#3a3a38;line-height:1.4}
+.anchor-def b{color:var(--ink)}
+
+/* ═══ kartu-konsep dua kolom ════════════════════════════════════ */
+.konsep-cols{display:flex;gap:44px;width:100%;align-items:stretch}
+.konsep-l{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.konsep-r{flex:0 0 820px;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.konsep-bul{display:flex;flex-direction:column;gap:13px}
+.konsep-bul .kb{display:flex;gap:14px;align-items:flex-start;font-size:22px;line-height:1.42;color:#3a3a38}
+.konsep-bul .kb b{color:var(--ink)}
+.konsep-bul .kb code{font-family:var(--mono);font-size:.9em;background:#eae7de;border-radius:6px;padding:2px 8px}
+.konsep-bul .km{color:var(--terracotta);font-family:var(--mono);font-weight:700;flex-shrink:0}
+.konsep-quote{margin-top:16px;background:#EFE3DC;border-left:6px solid var(--terracotta);
+  border-radius:10px;padding:15px 20px;font-size:21px;line-height:1.42;color:#3a3a38}
+.konsep-quote b{color:var(--ink)}
+.msg-top{font-size:25px;line-height:1.45;color:#3a3a38;margin-bottom:20px;max-width:1700px}
+.msg-top b{color:var(--ink)}
+.msg-top .hl{color:var(--terracotta);font-weight:600}
+.s-hook{margin-top:20px;font-family:var(--serif);font-style:italic;font-size:26px;color:var(--ink)}
+.s-hook b{color:var(--terracotta);font-style:normal}
+.sec-lbl{font-family:var(--sans);font-size:16px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--crail);margin-bottom:11px}
+
+/* alur satu baris: kamu → Claude → server → sistem */
+.flowline{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px}
+.flowline .fn{background:var(--cream);border:1px solid #e6e2d8;border-radius:12px;
+  padding:12px 20px;font-family:var(--mono);font-size:19px;color:#4a4a48}
+.flowline .fn.hi{background:#fff;border-color:var(--terracotta);color:var(--ink);font-weight:600}
+.flowline .fa{color:var(--terracotta);font-size:24px;line-height:1}
+.steps{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.steps .st{flex:1 1 0;min-width:240px;background:var(--cream);border:1px solid #e6e2d8;
+  border-radius:12px;padding:13px 17px;font-size:18px;line-height:1.35;color:#3a3a38}
+.steps .st b{color:var(--ink);display:block;font-size:16px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--crail);margin-bottom:5px;font-family:var(--sans)}
+
+/* 3 aturan aman */
+.rules{display:flex;gap:24px;width:100%}
+.rules .rl{flex:1 1 0;min-width:0;background:var(--cream);border:1px solid #e6e2d8;
+  border-radius:16px;padding:24px 26px;box-shadow:0 14px 36px -26px rgba(25,25,25,.4)}
+.rules .rn{width:48px;height:48px;border-radius:50%;background:var(--terracotta);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-family:var(--serif);
+  font-size:26px;margin-bottom:14px}
+.rules .rt{font-family:var(--serif);font-size:34px;line-height:1.15;margin-bottom:11px}
+.rules .rd{font-size:20px;line-height:1.42;color:#3a3a38}
+.rules .rd b{color:var(--ink)}
+.rules .rd code{font-family:var(--mono);font-size:.9em;background:#eae7de;border-radius:6px;padding:2px 8px}
+
+/* ═══ kartu-checklist (slide 6) ═════════════════════════════════ */
+.frame-note{font-size:22px;line-height:1.45;color:#3a3a38;margin-bottom:16px}
+.frame-note b{color:var(--ink)}
+.bonus{margin-top:14px;background:#E7EFE5;border-radius:12px;padding:13px 18px;
+  font-size:19px;line-height:1.42;color:#3d5540}
+.bonus b{color:#25361f}
+.bonus code{font-family:var(--mono);font-size:.9em;background:rgba(255,255,255,.65);
+  border-radius:6px;padding:2px 8px}
+
+/* ═══ kartu-bukti dua panel (slide 13) ══════════════════════════ */
+.bukti-cols{display:flex;gap:34px;width:100%;align-items:stretch}
+.bukti-cols>div{flex:1 1 0;min-width:0;display:flex;flex-direction:column}
+.pnl-lbl{font-family:var(--sans);font-size:17px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--crail);margin-bottom:10px}
+.bukti-cols .term{flex:1 1 auto}
+.konsep-l .term-body,.konsep-r .term-body{max-height:none;white-space:pre-wrap;
+  word-break:break-word;overflow-wrap:anywhere}
+.bukti-cols .term-body{max-height:none;font-size:19px;line-height:1.5;white-space:pre-wrap;
+  word-break:break-word;overflow-wrap:anywhere}
+.scr{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#fff;border:1px solid #e6e2d8;border-radius:16px;padding:44px 30px;flex:1 1 auto;
+  box-shadow:0 20px 50px -34px rgba(25,25,25,.5)}
+.scr .em{font-size:74px;line-height:1}
+.scr .t1{font-family:var(--serif);font-size:52px;margin-top:16px;color:var(--ink)}
+.scr .t2{font-size:24px;color:#6d6a63;margin-top:10px}
+.bukti-big{margin-top:24px;font-family:var(--serif);font-size:50px;line-height:1.15;
+  text-align:center;color:var(--ink)}
+.bukti-big b{color:var(--terracotta)}
+.bukti-hook{margin-top:16px;font-size:23px;line-height:1.45;color:#4a4a48;text-align:center;
+  max-width:1560px;margin-left:auto;margin-right:auto}
+.bukti-hook b{color:var(--ink)}
+.bukti-hook code{font-family:var(--mono);font-size:.9em;background:#eae7de;border-radius:6px;padding:2px 8px}
+
+/* ═══ checkpoint / section-break ════════════════════════════════ */
+.chkpt{align-items:flex-start}
+.chkpt .badge{display:inline-flex;align-items:center;gap:12px;background:#e7efe5;color:#4a7c4e;
+  font-family:var(--mono);font-size:24px;font-weight:600;padding:14px 28px;border-radius:100px;margin-bottom:36px}
+.chk-q{font-family:var(--serif);font-size:66px;line-height:1.16;max-width:1580px}
+.chk-note{margin-top:36px;font-family:var(--serif);font-style:italic;font-size:30px;color:var(--cloudy)}
+.big-msg{font-family:var(--serif);font-size:70px;line-height:1.16;max-width:1620px}
+.big-msg .hl{color:var(--terracotta)}
+.msg-note{margin-top:30px;font-size:27px;color:#4a4a48;line-height:1.5;max-width:1560px}
+.msg-note b{color:var(--ink)}
+.msg-list{margin-top:26px;display:flex;flex-direction:column;gap:16px;max-width:1620px}
+.msg-list .ml{display:flex;gap:20px;align-items:flex-start;font-size:26px;line-height:1.42;color:#3a3a38}
+.msg-list .ml b{color:var(--ink)}
+.msg-list .mk{color:var(--terracotta);font-family:var(--mono);font-weight:700;flex-shrink:0}
+.msg-list .ml code{font-family:var(--mono);font-size:.88em;background:#eae7de;border-radius:6px;padding:2px 8px}
+.cklist{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+.cklist .ci{display:flex;align-items:flex-start;gap:16px;font-size:25px;color:#3a3a38;line-height:1.4}
+.cklist .ci .bx{color:#4a7c4e;font-weight:800;flex-shrink:0}
+.cklist .ci b{color:var(--ink)}
+.cklist .ci code{font-family:var(--mono);font-size:.85em;background:#eae7de;border-radius:6px;padding:2px 8px}
+
+/* ═══ slide 27 · penutup ════════════════════════════════════════ */
+.pen-cols{display:flex;gap:36px;width:100%;align-items:flex-start}
+.pen-cols .pc{flex:1 1 0;min-width:0}
+.chk{display:flex;flex-direction:column;gap:13px}
+.chk .ci{display:flex;align-items:flex-start;gap:16px;font-size:20px;color:#3a3a38;line-height:1.4}
+.chk .ci .cnum{width:40px;height:40px;border-radius:50%;background:var(--terracotta);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:19px;flex-shrink:0}
+.chk .ci b{color:var(--ink)}
+.chk .ci code{font-family:var(--mono);font-size:.88em;background:#eae7de;border-radius:6px;padding:2px 7px}
+.report{background:var(--term-bg);color:var(--term-fg);border-radius:14px;padding:18px 22px;
+  font-family:var(--mono);font-size:17px;line-height:1.65}
+.report .rl{color:#8f8b82}
+.report .rt{color:var(--tan)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.chip{background:var(--cream);border:1px solid #e6e2d8;border-radius:100px;
+  padding:10px 17px;font-family:var(--mono);font-size:17px;color:#4a4a48}
+.chip b{color:var(--crail);font-weight:600}
+
+/* [w06] blok pemadatan per-slide (.s06-.s24) milik w05 DIHAPUS: nomor slide berbeda */
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* ── chrome: progress + help ─────────────────────────────────── */
+#num{position:absolute;right:34px;bottom:16px;z-index:20;font-family:var(--mono);
+  font-size:22px;color:var(--cloudy);opacity:.7;letter-spacing:.1em}
+#num b{color:var(--crail)}
+#hint{position:absolute;left:34px;bottom:16px;z-index:20;font-family:var(--sans);
+  font-size:18px;color:var(--cloudy);opacity:.55}
+#help{position:fixed;inset:0;z-index:40;background:rgba(25,25,25,.82);display:none;
+  align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+#help.on{display:flex}
+#help .box{background:var(--cream);border-radius:20px;padding:56px 64px;max-width:660px;width:100%}
+#help h3{font-size:40px;margin-bottom:30px}
+#help .hrow{display:flex;justify-content:space-between;align-items:center;padding:13px 0;
+  border-bottom:1px solid #e6e2d8;font-size:22px;gap:20px}
+#help .hrow:last-child{border:none}
+#help .hk{font-family:var(--mono);background:#eae7de;border-radius:8px;padding:4px 14px;color:var(--ink)}
+#help .close{margin-top:26px;font-size:18px;color:var(--cloudy)}
+
+/* ── reduced motion / static ─────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;animation-delay:0ms !important}
+  .fragment{transition:opacity .25s ease !important;transform:none !important}
+  .slide.active .underline-draw path{stroke-dashoffset:0 !important;animation:none}
+}
+.static *{animation:none !important}
+.static .slide.active .underline-draw path{stroke-dashoffset:0 !important}
+.static .fragment{opacity:1 !important;transform:none !important}
+.static .stagger>*{opacity:1 !important;transform:none !important}
+
+/* ── mobile / layar kecil (tap-through, tanpa transform-scale) ─────────── */
+@media (max-width:820px){
+  html,body{overflow:auto}
+  #viewport{position:static;display:block;min-height:100dvh}
+  #stage{position:relative;width:100vw;min-height:100dvh;height:auto;
+    transform:none !important;box-shadow:none}
+  #blobs{position:fixed}
+
+  .slide{padding:56px 18px 88px;justify-content:flex-start}
+  .slide.dense,.slide.kq{padding:56px 18px 88px}
+  .slide.active{position:relative;inset:auto;min-height:100dvh}
+
+  .s01 h1{font-size:clamp(40px,11vw,60px);max-width:100%}
+  .s01 .kicker{font-size:16px;letter-spacing:.2em;margin-bottom:26px}
+  .s01 .sub{font-size:24px;margin-top:36px}
+  .underline-draw svg{bottom:-8px;height:16px}
+  .s-cover-meta{font-size:18px;margin-top:26px}
+  .s-cover-foot{font-size:18px}
+
+  .eyebrow{font-size:15px;letter-spacing:.18em;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+  .eyebrow::before{display:none}
+  .eyebrow .sp{margin-left:0;width:100%;gap:10px;flex-wrap:wrap}
+  .eyebrow .pg{font-size:14px;padding:5px 12px}
+  .eyebrow .tb{font-size:13px;padding:6px 14px}
+  .who{font-size:14px;padding:8px 14px;letter-spacing:.06em}
+  .who .ic{font-size:15px}
+  .h2{font-size:clamp(32px,8vw,46px)}
+  .h2.sm{font-size:clamp(28px,7vw,40px)}
+  .lead{font-size:19px}
+  .big-msg{font-size:clamp(30px,8vw,44px);max-width:100%}
+  .msg-note{font-size:19px;margin-top:24px}
+  .msg-list .ml{font-size:18px}
+  .msg-top{font-size:19px}
+  .s-hook{font-size:20px}
+  .cklist .ci{font-size:18px}
+
+  /* semua grid/kolom → 1 kolom */
+  .kq-cols,.kamus-cols,.bukti-cols,.konsep-cols,.pen-cols,.rules,.steps,.flowline{
+    flex-direction:column;gap:22px !important}
+  .kq-l,.kq-r,.kamus-l,.kamus-r,.konsep-l,.konsep-r,.pen-cols .pc,
+  .bukti-cols>div,.rules .rl,.steps .st{
+    flex:1 1 auto !important;width:100%}
+  .flowline{align-items:flex-start}
+  .flowline .fa{transform:rotate(90deg)}
+
+  .card-name{font-size:clamp(28px,8vw,40px);margin-bottom:10px}
+  .card-name .sub{font-size:clamp(15px,5vw,20px)}
+  .srv .sv{font-size:14px;padding:6px 12px}
+  .card-line{font-size:17px !important;margin-bottom:12px}
+  .card-tag{font-size:12px;padding:5px 10px}
+  .anchor,.tugasqa,.warnbox,.infobox,.konsep-quote,.anchor-def,.kamus-line,.bonus{
+    font-size:16px !important;padding:13px 15px !important}
+  .beda,.note-s{font-size:14px !important}
+  .barusan{font-size:17px}
+  .beat .q{font-size:21px}
+  .beat .a{font-size:15px}
+  .chip-why{font-size:14px}
+
+  .term-body{padding:16px 16px;font-size:15px !important;line-height:1.5;max-height:none}
+  .term-out{font-size:14px;margin-top:14px;padding-top:14px}
+  .term.mini .term-body,.term.tiny .term-body{font-size:14px !important;padding:14px 14px}
+  .term-title{font-size:13px}
+  .term-line{gap:10px}
+  .ex{font-size:12px;padding:4px 10px}
+  .wb{font-size:12px;padding:5px 10px;letter-spacing:.08em}
+  .wb.sm{font-size:11px}
+
+  .tt-cmds{font-size:15px}.tt-inner .tt-cmds{font-size:14px}
+  .legend .lr{font-size:15px}
+  .gloss .gr{flex-direction:column;gap:3px;padding:9px 14px}
+  .gloss .gk{flex:1 1 auto;font-size:15px}
+  .gloss .gv{font-size:14px}
+
+  .tbl .tr,.tbl .tr.head{grid-template-columns:1fr !important;gap:6px;padding:11px 14px}
+  .tbl .tr.head{display:none}
+  .tbl .k{font-size:16px}
+  .tbl .v{font-size:15px}
+
+  .rules .rt{font-size:24px}
+  .rules .rd{font-size:16px}
+  .rules .rn{width:38px;height:38px;font-size:20px}
+
+  .bukti-big{font-size:clamp(24px,7vw,34px);margin-top:20px}
+  .bukti-hook{font-size:17px}
+  .pnl-lbl{font-size:14px}
+  .scr .em{font-size:48px}
+  .scr .t1{font-size:30px}
+  .scr .t2{font-size:17px}
+
+  .chkpt .badge{font-size:17px;padding:11px 20px;margin-bottom:26px}
+  .chk-q{font-size:clamp(28px,8vw,42px)}
+  .chk-note{font-size:20px;margin-top:26px}
+
+  .konsep-bul .kb{font-size:16px}
+  .chk .ci{font-size:16px;gap:12px}
+  .chk .ci .cnum{width:32px;height:32px;font-size:15px}
+  .report{font-size:13px;padding:15px 15px}
+  .chip{font-size:14px;padding:8px 14px}
+  .frame-note{font-size:17px}
+
+  #num{right:14px;bottom:12px;font-size:15px}
+  #hint{display:none}
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* ═══ W06 · ATURAN TATA LETAK BAKU (sesi 51) ════════════════════ */
+/* eyebrow dipatok · kolom rata atas · slide praktek mulai y=136   */
+/* ═══════════════════════════════════════════════════════════════ */
+.slide>.eyebrow{position:absolute;top:60px;left:130px;right:130px;width:auto;margin-bottom:0;z-index:5}
+.slide.dense>.eyebrow,.slide.kq>.eyebrow{left:76px;right:76px}
+.slide.kq{padding:136px 76px 76px;justify-content:flex-start;align-items:flex-start}
+.slide.dense{padding:136px 76px 76px;justify-content:flex-start}
+.slide.mid{justify-content:center}
+/* slide tanpa terminal tinggi — seimbangkan di tengah, eyebrow tetap dipatok */
+.slide.dense.s17,.slide.dense.s26,.slide.dense.s28{justify-content:center}
+.kq-cols{align-items:flex-start}
+.kq-l{justify-content:flex-start}
+.kq-r{flex:0 0 980px;justify-content:flex-start}
+.kq-r>.term{flex:0 0 auto}
+.konsep-cols{align-items:flex-start}
+.konsep-l,.konsep-r{justify-content:flex-start}
+.bukti-cols{align-items:flex-start}
+#num{bottom:52px}
+#hint{bottom:52px}
+code{overflow-wrap:anywhere;word-break:normal}
+
+/* badge tempat mengetik — tambahan w06: SLASH (di dalam sesi claude) */
+.wb.s{background:var(--tan);color:#2E2C2A}
+
+/* ukuran font terminal baku w06 */
+.term-body{font-size:22px}
+.term-out{font-size:20px}
+.term.mini .term-body{font-size:19px}
+.term.tiny .term-body{font-size:17px}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* ═══ MODUL TERMINAL PER-LANGKAH (baku sejak w06) ═══════════════ */
+/* satu frame = satu terminal; tiap langkah punya badge tempat,    */
+/* perintah, dan "hasil yang diharapkan" berlabel jelas.           */
+/* ═══════════════════════════════════════════════════════════════ */
+.term-body.stps{padding:20px 26px;max-height:none;overflow-y:auto;overflow-x:hidden;
+  scroll-behavior:smooth}
+/* terminal di kolom kanan slide praktek: tingginya DIPATOK, isinya yang
+   bergulir. Dengan begitu kotak tidak pernah tumbuh saat langkah bertambah. */
+.kq-r>.term>.term-body.stps{height:772px}
+.kq-l .term>.term-body.stps{height:auto;overflow:visible}
+
+/* satu langkah = dua ketukan: (1) perintah diketik, (2) hasilnya muncul.
+   Bagian yang belum diketuk TIDAK memakan tinggi sama sekali. */
+.stp{display:none}
+.stp.on{display:block}
+.stp-part{display:none}
+.stp-part.on{display:block;animation:beatIn .3s ease}
+@keyframes beatIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.tbeats{display:none}
+
+.stp+.stp{margin-top:15px;padding-top:15px;border-top:1px solid rgba(255,255,255,.09)}
+.stp-h{display:flex;align-items:center;gap:11px;margin-bottom:8px;flex-wrap:wrap}
+.stp-n{font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:.16em;color:#7d7a72}
+.stp-cwd{font-family:var(--mono);font-size:14px;color:#8f8b82;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+  border-radius:100px;padding:3px 11px}
+.stp-cmd{display:flex;gap:12px;align-items:flex-start;white-space:pre-wrap;
+  overflow-wrap:anywhere;font-size:19px;line-height:1.45}
+.stp-cmd .pm{color:var(--terracotta);font-weight:700;flex-shrink:0}
+.stp-cmd .tx{min-width:0}
+.stp-out{margin-top:10px;white-space:pre-wrap;overflow-wrap:anywhere;
+  color:#cfcdc5;font-size:18px;line-height:1.5}
+.stp-out .lbl{display:block;font-family:var(--sans);font-size:13px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#6f6b63;margin-bottom:7px}
+.stp-out .hl-line{display:inline-block;background:rgba(217,119,87,.26);color:#fff;
+  border-radius:5px;padding:1px 7px;margin:1px 0}
+.stp-note{margin-top:9px;font-family:var(--sans);font-size:15px;line-height:1.42;color:var(--tan)}
+.term.md .stp-cmd{font-size:19px}.term.md .stp-out{font-size:18px}
+.term.sm .stp-cmd{font-size:17px}.term.sm .stp-out{font-size:15.5px}
+.term.xs .stp-cmd{font-size:15px}.term.xs .stp-out{font-size:14px}
+.term.sm .stp+.stp,.term.xs .stp+.stp{margin-top:12px;padding-top:12px}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* ═══ DUA TERMINAL BERDAMPINGAN (baru di w06) ═══════════════════ */
+/* T1 sesi kerja · T2 sesi audit — hanya satu yang menyala          */
+/* ═══════════════════════════════════════════════════════════════ */
+.dual{display:flex;gap:26px;width:100%;align-items:stretch}
+.dual .dt{flex:1 1 0;min-width:0;display:flex;flex-direction:column;
+  transition:opacity .35s ease,filter .35s ease}
+.dual .dt.dim{opacity:.45;filter:saturate(.45)}
+.dt-lbl{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.dt-lbl .nm{font-family:var(--sans);font-size:19px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--crail)}
+.dt-lbl .ds{font-size:17px;color:#6d6a63}
+.dual .term{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+.dual .term-body{flex:1 1 auto;height:596px;max-height:none;overflow-y:auto;
+  scroll-behavior:smooth;padding:18px 22px}
+.dual.tall .term-body{height:672px}
+.dual.short .term-body{height:520px}
+.dual.mini .term-body{height:440px}
+.arms .term-title,.dual .term-title{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.28}
+.dual .stp-cmd{font-size:17px}
+.dual .stp-out{font-size:15.5px}
+.dual .stp+.stp{margin-top:12px;padding-top:12px}
+.dual-foot{display:flex;align-items:center;gap:18px;margin-top:16px;flex-wrap:wrap}
+.dual-foot .dfx{font-size:19px;color:#3a3a38;line-height:1.4}
+.dual-foot .dfx b{color:var(--ink)}
+.dstep-pill{font-family:var(--mono);font-size:18px;font-weight:600;color:#fff;
+  background:var(--terracotta);border-radius:100px;padding:8px 20px;flex-shrink:0}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* ═══ PAPAN SKOR (berulang, terisi bertahap) ════════════════════ */
+/* ═══════════════════════════════════════════════════════════════ */
+.board{display:flex;flex-direction:column;gap:14px;width:100%;max-width:1620px}
+.board .br{display:grid;grid-template-columns:78px 1fr 320px 150px;gap:22px;align-items:center;
+  background:var(--cream);border:1px solid #e6e2d8;border-radius:14px;padding:20px 26px;
+  box-shadow:0 12px 32px -26px rgba(25,25,25,.4);transition:background .3s ease,border-color .3s ease}
+.board .bk{font-family:var(--serif);font-size:38px;line-height:1;color:var(--cloudy)}
+.board .bt{font-size:25px;line-height:1.34;color:#3a3a38}
+.board .bt b{color:var(--ink)}
+.board .bv{font-family:var(--mono);font-size:32px;color:var(--cloudy);letter-spacing:.04em}
+.board .bw{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:#8a867b;text-align:right}
+.board .br.on{background:#fff;border-color:var(--terracotta)}
+.board .br.on .bk{color:var(--crail)}
+.board .br.on .bv{color:var(--terracotta);font-weight:700}
+.board .br.on .bw{color:var(--crail)}
+.board-note{margin-top:22px;font-size:24px;line-height:1.45;color:#4a4a48;max-width:1560px}
+.board-note b{color:var(--ink)}
+.board-note .hl{color:var(--terracotta);font-weight:600}
+
+/* ═══ pertanyaan tulang punggung — slide tunggal ════════════════ */
+.bbq{background:#2E2C2A;border-radius:20px;padding:44px 52px;color:#EDE9DE;max-width:1660px}
+.bbq .h{display:block;font-family:var(--sans);font-size:17px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--tan);margin-bottom:20px}
+.bbq .q{font-family:var(--serif);font-size:46px;line-height:1.3}
+.bbq .q b{color:var(--terracotta)}
+.bbq-map{display:flex;gap:18px;margin-top:26px;width:100%;max-width:1660px}
+.bbq-map .bm{flex:1 1 0;background:var(--cream);border:1px solid #e6e2d8;border-radius:14px;
+  padding:18px 22px}
+.bbq-map .bm .p{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--ink);
+  line-height:1.35;margin-bottom:9px}
+.bbq-map .bm .k{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--crail)}
+.bbq-map .bm .d{font-size:17px;color:#6d6a63;margin-top:5px;line-height:1.35}
+
+/* ═══ peta 7 kartu ══════════════════════════════════════════════ */
+.mapc{display:flex;flex-direction:column;gap:11px;width:100%;max-width:1700px}
+.mapc .mr{display:grid;grid-template-columns:110px 1fr 300px 90px;gap:20px;align-items:center;
+  background:var(--cream);border:1px solid #e6e2d8;border-radius:12px;padding:13px 22px}
+.mapc .mr.brk{background:transparent;border-style:dashed}
+.mapc .mk{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--crail)}
+.mapc .mt{font-size:22px;color:var(--ink);line-height:1.32}
+.mapc .md2{font-family:var(--mono);font-size:17px;color:#6d6a63;line-height:1.32}
+.mapc .mm{font-family:var(--mono);font-size:18px;color:#8a867b;text-align:right}
+.mapc .arm{display:inline-block;font-family:var(--sans);font-size:13px;font-weight:700;
+  letter-spacing:.12em;padding:4px 10px;border-radius:7px;margin-right:10px}
+.mapc .arm.a{background:#EFE3DC;color:var(--crail)}
+.mapc .arm.b{background:#E7EFE5;color:#4a7c4e}
+.mapc .arm.c{background:#2E2C2A;color:var(--tan)}
+
+/* ═══ dua lengan K3 ═════════════════════════════════════════════ */
+.arms{display:flex;gap:28px;width:100%;align-items:stretch}
+.arms .ar{flex:1 1 0;min-width:0;display:flex;flex-direction:column}
+.arm-h{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.arm-h .bg{font-family:var(--sans);font-size:19px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;padding:9px 20px;border-radius:100px}
+.arm-h .bg.a{background:#eae7de;color:#6d6a63}
+.arm-h .bg.b{background:var(--terracotta);color:#fff}
+.arm-h .fl{font-family:var(--mono);font-size:18px;color:#3a3a38}
+.arm-h .fl b{color:var(--crail)}
+
+/* ═══ tiga fakta K7 ═════════════════════════════════════════════ */
+.facts{display:flex;gap:20px;width:100%;margin-top:16px}
+.facts .fc{flex:1 1 0;background:var(--cream);border:1px solid #e6e2d8;border-radius:14px;
+  padding:20px 24px}
+.facts .fc .n{font-family:var(--serif);font-size:44px;line-height:1;color:var(--terracotta)}
+.facts .fc .l{font-size:19px;line-height:1.38;color:#3a3a38;margin-top:9px}
+.facts .fc .l b{color:var(--ink)}
+
+/* ═══ daftar bawa-pulang (kolom) ════════════════════════════════ */
+.facts.col{flex-direction:column;gap:12px}
+.facts.col .ft{display:flex;gap:16px;align-items:flex-start;background:var(--cream);
+  border:1px solid #e6e2d8;border-radius:12px;padding:14px 20px;font-size:21px;line-height:1.34;
+  color:#3a3a38}
+.facts.col .ft code{font-family:var(--mono);font-size:.92em;background:#eae7de;border-radius:6px;
+  padding:2px 8px;color:var(--ink);overflow-wrap:anywhere}
+.facts.col .fk{font-family:var(--sans);font-size:14px;font-weight:800;letter-spacing:.12em;
+  color:var(--crail);background:#fff;border:1px solid #e6d9d2;border-radius:100px;
+  padding:6px 13px;flex-shrink:0;margin-top:2px;min-width:82px;text-align:center}
+.facts.col .fd{display:block;margin-top:4px;font-size:17px;color:#6d6a63}
+
+/* ═══ langkah bernomor (kolom) ══════════════════════════════════ */
+.steps.col{flex-direction:column;gap:12px}
+.steps.col .stp2{display:flex;gap:16px;align-items:flex-start;background:var(--cream);
+  border:1px solid #e6e2d8;border-radius:12px;padding:15px 20px;font-size:22px;line-height:1.36;
+  color:#3a3a38;width:100%}
+.steps.col .stp2 b{color:var(--ink)}
+.steps.col .stp2 code{font-family:var(--mono);font-size:.88em;background:#eae7de;border-radius:6px;
+  padding:2px 8px;overflow-wrap:anywhere}
+.steps.col .stp2 .n{font-family:var(--serif);font-size:30px;line-height:1;color:var(--terracotta);
+  flex-shrink:0;width:30px}
+
+/* ═══ pertanyaan besar di kolom kiri ════════════════════════════ */
+.big-q{margin-top:16px;font-family:var(--serif);font-size:40px;line-height:1.24;color:var(--crail);
+  border-left:5px solid var(--terracotta);padding-left:22px}
+
+/* ═══ baris papan skor yang ditonjolkan ═════════════════════════ */
+.board .br.big{padding-top:22px;padding-bottom:22px}
+.board .br.big .bv{font-size:44px}
+.board .br.big .bt{font-size:28px}
+
+/* ═══ badge "Claude menjawab" + slide penutup ═══════════════════ */
+.who.cl{background:#2E2C2A;color:#EDE9DE}
+.slide.cover-out{background:var(--cream)}
+.end-note{margin-top:26px;font-family:var(--sans);font-size:22px;letter-spacing:.02em;
+  color:#6d6a63}
+.end-note code{font-family:var(--mono);font-size:.92em;background:#eae7de;border-radius:6px;
+  padding:2px 8px;color:var(--ink)}
+
+/* ═══ pemadatan per-slide (diukur headless) ═════════════════════ */
+.term.sm .term-body.stps{padding:17px 22px}
+.term.xs .term-body.stps{padding:15px 19px}
+
+/* sub judul kartu w06 selalu satu baris sendiri (isinya panjang / mono) */
+.card-name .sub{display:block;margin-top:11px;line-height:1.3}
+
+/* flag pendek jangan pernah patah di tengah tanda hubung */
+code.nw{white-space:nowrap}
+
+/* perintah panjang di dalam kotak: satu baris utuh, tak boleh terpotong wrap */
+.warnbox code.blk,.infobox code.blk{display:block;margin-top:7px;white-space:nowrap;
+  font-size:.84em;padding:5px 10px}
+
+/* ═══ mobile: batalkan patokan absolut ══════════════════════════ */
+@media (max-width:820px){
+  .slide>.eyebrow{position:static;margin-bottom:20px}
+  .slide.kq,.slide.dense{padding:56px 18px 88px}
+  .dual{flex-direction:column;gap:22px}
+  .dual .dt{flex:1 1 auto;width:100%}
+  .dual .dt.dim{opacity:1;filter:none}
+  .dual .term-body{height:auto;max-height:none}
+  .kq-r>.term>.term-body.stps{height:auto}
+  .board .br{grid-template-columns:1fr;gap:6px;padding:14px 16px}
+  .board .bk{font-size:24px}.board .bt{font-size:17px}.board .bv{font-size:22px}
+  .board .bw{text-align:left;font-size:12px}
+  .board-note{font-size:17px}
+  .bbq{padding:24px 20px}.bbq .q{font-size:24px}
+  .bbq-map{flex-direction:column;gap:12px}
+  .mapc .mr{grid-template-columns:1fr;gap:5px;padding:12px 14px}
+  .mapc .mt{font-size:17px}.mapc .md2{font-size:14px}.mapc .mm{text-align:left;font-size:14px}
+  .arms,.facts{flex-direction:column;gap:18px}
+  .facts.col .ft{font-size:16px}.facts.col .fd{font-size:14px}
+  .steps.col .stp2{font-size:16px}.steps.col .stp2 .n{font-size:22px;width:22px}
+  .big-q{font-size:26px;padding-left:14px}
+  .board .br.big .bv{font-size:28px}.board .br.big .bt{font-size:18px}
+  .end-note{font-size:16px}
+  .stp-cmd{font-size:15px !important}
+  .stp-out{font-size:14px !important}
+  .term-body.stps{padding:14px 14px}
+  .dual-foot{gap:12px}
+}
+</style>
+</head>
+<body>
+<div id="viewport">
+<div id="stage">
+  <div id="blobs"></div>
+
+<script type="application/json" class="term-data">
+{
+  "k0l1": {
+    "title": "Terminal — cek dasar", "size": "md",
+    "steps": [
+      { "w": "shell",
+        "cmd": "node -v            # v24+\nnpm -v\ngit --version\npython3 --version  # 3.10+\nclaude --version   # WAJIB 2.1.224+",
+        "out": "v24.10.0\n11.6.0\ngit version 2.39.3 (Apple Git-146)\nPython 3.12.3\n» 2.1.224 (Claude Code)",
+        "note": "Boleh lebih tinggi — di mesin uji ia naik ke 2.1.229 di hari yang sama. Yang tidak boleh: lebih rendah." }
+    ]
+  },
+  "k0repo": {
+    "title": "Terminal 1 — repo latihan & vault", "cwd": "~", "size": "sm",
+    "steps": [
+      { "w": "shell",
+        "cmd": "cd ~\ngit clone --branch w06 https://github.com/ndollem/venturo-benefit-survey.git\ncd venturo-benefit-survey\ngit switch -c latihan\nnpm install",
+        "out": "Cloning into 'venturo-benefit-survey'...\nResolving deltas: 100% (155/155), done.\nNote: switching to '906d97c...'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n...\n» Switched to a new branch 'latihan'\n\nadded 106 packages, and audited 107 packages in 1s\n\n2 high severity vulnerabilities",
+        "note": "Clone ±6 detik · npm install 1–7 detik. \"2 high severity\" itu normal (dependensi dev) — jangan npm audit fix." },
+      { "w": "shell",
+        "cmd": "ls assets/w06                  # venturo-brain/  rules/  hooks/\ncp -r assets/w06/venturo-brain ~/venturo-brain\nls -a ~/venturo-brain/.graphifyignore    # harus ada — dipakai di K7",
+        "note": "Vault mendarat di home, sejajar repo — bukan di dalamnya." }
+    ]
+  },
+  "k0l3": {
+    "title": "Terminal 2 — uv · graphify · codeburn", "size": "sm",
+    "steps": [
+      { "w": "shell",
+        "cmd": "uv --version || curl -LsSf https://astral.sh/uv/install.sh | sh\nexec $SHELL -l                       # muat ulang PATH sesudah instalasi uv\nuv tool install --upgrade graphifyy -q\ngraphify --version\ngraphify install                     # sinkronkan skill /graphify dengan versi paket",
+        "out": "uv 0.11.28 (ebf0f43d7 2026-07-07 aarch64-apple-darwin)\ngraphify 0.9.41\n» warning: skill is from graphify 0.9.39, package is 0.9.41. Run 'graphify install' to update.\n\n  references       ->  ~/.claude/skills/graphify/references\n  skill installed  ->  ~/.claude/skills/graphify/SKILL.md\n  CLAUDE.md        ->  already registered (no change)\n\nDone. Open your AI coding assistant and type:\n\n  /graphify .",
+        "note": "graphify install mendaftarkan diri ke ~/.claude/CLAUDE.md global, bukan ke repo." },
+      { "w": "shell",
+        "cmd": "npm i -g codeburn\nNPMBIN=\"$(npm prefix -g)/bin\"        # bin npm global, sering belum di PATH\ngrep -q \"$NPMBIN\" ~/.zshrc 2>/dev/null \\\n  || echo \"export PATH=\\\"$NPMBIN:\\$PATH\\\"\" >> ~/.zshrc\nexec $SHELL -l                       # muat ulang PATH\ncodeburn --version",
+        "out": "0.9.20",
+        "note": "Global, bukan npx — dan PATH-nya didaftarkan, kalau tidak: command not found." }
+    ]
+  },
+  "k0gate": {
+    "title": "Terminal — gerbang lulus K0", "cwd": "~/venturo-benefit-survey", "size": "sm",
+    "steps": [
+      { "w": "shell",
+        "cmd": "claude --version && uv --version && graphify --version && codeburn --version \\\n  && git branch --show-current && ls assets/w06 && ls ~/venturo-brain | head -3",
+        "out": "2.1.229 (Claude Code)\nuv 0.11.28 (ebf0f43d7 2026-07-07 aarch64-apple-darwin)\ngraphify 0.9.41\n0.9.20\n» latihan\nhooks\nrules\nventuro-brain\n00-peta-vault.md\nhdr-001-submit-via-apps-script.md\nhdr-002-localstorage-bukan-indexeddb.md",
+        "note": "Sebelas baris. Yang kelima harus berbunyi latihan." }
+    ]
+  },
+  "k1l1": {
+    "title": "claude — venturo-benefit-survey", "cwd": "~/venturo-benefit-survey", "size": "sm",
+    "steps": [
+      { "w": "shell", "cmd": "claude" },
+      { "w": "claude",
+        "cmd": "Kalau aku ubah cara submitSurvey mengirim jawaban di src/hooks/useSurveyState.ts,\nbagian mana saja di aplikasi ini yang ikut terpengaruh? Telusuri sendiri filenya.",
+        "out": "⏺ Aku telusuri dulu file-nya.\n» Searched for 3 patterns, read 7 files, ran 2 shell commands\n\n⏺ Sudah kutelusuri. Berikut peta dampaknya.\n\n  Titik pusat\n  src/hooks/useSurveyState.ts:113-157 — submitSurvey melakukan 4 hal sekaligus,\n  jadi \"cara mengirim\" menyentuh keempatnya:\n  1. transisi state → 'submitting' + menyimpan stayReason/leaveReason (:114)\n  2. membentuk priorityMap dari state.priorities (:117-122)\n  3. membentuk payload { name, answers, stayReason, leaveReason } (:124-132)\n  4. fetch(config.submitEndpoint, { mode:'no-cors' }) (:134-156)\n\n  Yang ikut terpengaruh di dalam app\n  A. Signature / pemanggil\n     - retrySubmit — useSurveyState.ts:159-161\n     ...\n\n» ✻ Crunched for 1m 12s",
+        "note": "1 menit 12 detik di mesin uji. Tujuh file itu masuk context UTUH dan tetap di sana sampai sesi berakhir." }
+    ]
+  },
+  "k1dual": {
+    "t1": { "title": "Sesi claude yang sama", "cwd": "~/venturo-benefit-survey", "w": "slash" },
+    "t2": { "title": "Terminal biasa — pola mingguan", "cwd": "~/venturo-benefit-survey", "w": "shell" },
+    "steps": [
+      { "t": 1, "w": "slash", "cmd": "/context",
+        "out": "» ⛁ Messages: 37.7k tokens (19.9%)\n⛶ Free space: 90.6k (47.7%)\n⛝ Autocompact buffer: 33k tokens (17.4%)\n  Auto-compact window: 190k tokens\n\n  MCP tools · /mcp (loaded on-demand)   └ 66 tools · 0 tokens\n  Custom agents · .claude/agents/       └ 3 agents · 314 tokens\n  Memory files · /memory                └ 1 file · 101 tokens\n  Skills · /skills                      └ 169 skills · 9.9k tokens",
+        "note": "Sebelum pertanyaan diajukan, Messages di mesin uji hanya 4,4k. Inilah baris A." },
+      { "t": 1, "w": "slash", "cmd": "/cost",
+        "note": "Biaya sesi ini saja. Lalu keluar dengan Ctrl-D — sesi berikutnya berjalan di terminal sebelah." },
+      { "t": 2, "w": "shell", "cmd": "codeburn overview --period today",
+        "out": "CodeBurn  Today (2026-08-13)\n\nTotals\n  Cost       $23.06\n  Tokens     20,402,029\n  Calls      240   sessions 16\n» Cache hit  100.0%\n\nTokens\n┌─────────────┬──────────────┬─────────┐\n│  Type       │      Tokens  │  Share  │\n├─────────────┼──────────────┼─────────┤\n│  Input      │         467  │     0%  │\n│  Output     │     160,156  │     1%  │\n│  Cache in   │     963,983  │     5%  │\n│  Cache out  │  19,277,423  │    94%  │\n│  Total      │  20,402,029  │   100%  │\n└─────────────┴──────────────┴─────────┘",
+        "note": "Di bawahnya masih ada empat tabel lagi — cukup dua blok pertama." }
+    ]
+  }
+}
+</script>
+
+  <!-- ══ 1 · COVER ══════════════════════════════════════════════ -->
+  <section class="slide s01" data-slide>
+    <div class="kicker">Claude Code Unleashed · Season 2 · Minggu 2</div>
+    <h1>Token, Ingatan &amp; <span class="underline-draw"><span class="pct">Second Brain</span>
+        <svg viewBox="0 0 300 34" preserveAspectRatio="none"><path d="M4 20 C 80 30, 220 8, 296 22"/></svg>
+      </span></h1>
+    <div class="sub">Satu pertanyaan, <b>diukur dua kali</b></div>
+    <div class="s-cover-meta">w06 · Season 2 · Minggu 2 · 136 menit + cadangan · Mid–Senior</div>
+    <div class="s-cover-foot">Semuanya dipasang <b>dari nol hari ini</b> — tidak ada PR minggu ini. Layar ini panduanmu: tiap kartu menyebut sendiri siapa yang mengetik.</div>
+  </section>
+
+  <!-- ══ 2 · K0 LANGKAH 1 ══════════════════════════════════════ -->
+  <section class="slide kq s02" data-slide>
+    <div class="eyebrow">K0 · Pasang dari nol — Langkah 1<span class="sp"><span class="pg">panduan K0 L1</span><span class="tb">12 menit</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name">Lima baris, satu syarat keras<span class="sub">claude --version ≥ 2.1.224</span></div>
+        <div class="card-line"><span class="card-tag ok">URUTAN</span><span><b>1</b> cek dasar · <b>2</b> repo + vault · <b>3</b> uv + graphify · <b>4</b> codeburn · <b>5</b> Obsidian <i>(opsional, dipakai sekali di K7)</i>. Asumsinya <b>mesin peserta kosong</b>.</span></div>
+        <div class="warnbox"><span class="h">Kalau claude di bawah 2.1.224</span><code>claude update</code>, lalu tutup dan buka ulang. Hook <code>InstructionsLoaded</code> di <b>K3</b> dan <code>/peers</code> di <b>K4</b> <b>tidak ada</b> di versi lama — dan gejalanya bukan pesan error, melainkan <b>"kok tidak terjadi apa-apa"</b>.</div>
+        <div class="warnbox"><span class="h">Aturan kelas</span>Yang gagal di langkah ini ditangani <b>sesudah</b> sesi — jangan menahan 20 orang demi satu mesin. Sambil unduhan Langkah 2 &amp; 3 berjalan, kita masuk <b>Pembuka</b>; delapan menitnya persis menutupi waktu tunggu.</div>
+      </div>
+      <div class="kq-r"><div class="term md" data-term="k0l1"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 3 · K0 LANGKAH 2 — REPO + VAULT ═══════════════════════ -->
+  <section class="slide kq s03" data-slide>
+    <div class="eyebrow">K0 · Langkah 2 — repo latihan &amp; vault<span class="sp"><span class="pg">panduan K0 L2</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name">Klon dari <b>tag</b>, lalu keluar dari detached HEAD<span class="sub">jalankan dari home — semua orang berakhir di tempat yang sama</span></div>
+        <div class="term mini" style="margin-bottom:14px">
+          <div class="term-bar"><span class="wb r">BACA SAJA</span><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">peta folder sesudah langkah ini</span></div>
+          <div class="term-body">~/
+├── venturo-benefit-survey/   ← folder kerja (K1–K6)
+│   └── assets/w06/           ← sumber aset
+└── venturo-brain/            ← vault Obsidian (K7)</div>
+        </div>
+        <div class="warnbox"><span class="h">Dua hal yang tidak boleh dilewat</span><b>(1)</b> <code>--branch w06</code> menunjuk <b>tag</b> — yang clone <code>main</code> tidak punya <code>assets/w06/</code> dan mati di K3 maupun K7. <b>(2)</b> Layar <b>detached HEAD</b> itu normal; <code>git switch -c latihan</code> mengeluarkanmu dari sana, dan K3 &amp; K5 menulis file baru ke folder ini.</div>
+        <div class="anchor"><span class="ck">📍</span><span><span class="lb">Vault dipatok di ~/venturo-brain</span>Bukan di dalam repo: semua perintah K7 ditulis persis <code>~/venturo-brain</code>, <code>graphify extract .</code> di K5 akan <b>melahap vault</b> kalau ia di dalam repo, dan dialog <b>Open folder as vault</b> milik Obsidian membuka di home.</span></div>
+        <div class="note-s">Sudah punya repo ini dari w05? <code>git fetch origin --tags &amp;&amp; git switch -c latihan w06</code></div>
+      </div>
+      <div class="kq-r"><div class="term sm" data-term="k0repo"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 4 · K0 LANGKAH 3–4 ════════════════════════════════════ -->
+  <section class="slide kq s04" data-slide>
+    <div class="eyebrow">K0 · Langkah 3 &amp; 4 — uv · graphify · codeburn<span class="sp"><span class="pg">panduan K0 L3–L4</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name">Dua jebakan yang memakan korban<span class="sub">keduanya terbukti di dry run</span></div>
+        <div class="card-line"><span class="card-tag no">1</span><span><b>Nama paket:</b> PyPI-nya <code>graphifyy</code> — <b>dua huruf y</b>. <code>graphify-cli</code> <b>tidak ada</b>.</span></div>
+        <div class="card-line"><span class="card-tag no">2</span><span><b>Skill basi:</b> sesudah upgrade, skill <code>/graphify</code> masih versi lama sampai <code>graphify install</code> dijalankan. CLI memperingatkan sendiri (baris <code>warning:</code>). Yang melewatkannya <b>gagal di K7</b> dengan pesan membingungkan.</span></div>
+        <div class="warnbox"><span class="h">Pasang codeburn global, jangan andalkan npx</span>Di K2 kita memasang <code>codeburn guard</code>, dan hook yang ia tulis memanggil <code>codeburn</code> <b>tanpa npx</b>. Kalau tidak ada di PATH, <b>setiap giliran Claude sesudah K2 berakhir dengan teks merah</b>: <code>Stop hook error: /bin/sh: codeburn: command not found</code></div>
+        <div class="warnbox"><span class="h">npm i -g sukses, tapi command not found</span>Folder bin npm global <b>belum tentu ada di PATH</b> (prefix custom, mis. <code>~/.npm-global</code>) — terbukti di mesin uji. Dua baris tengah mendaftarkannya <b>sekali, permanen</b>; <code>exec $SHELL -l</code> membuatnya berlaku di terminal ini.</div>
+      </div>
+      <div class="kq-r"><div class="term sm" data-term="k0l3"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 5 · K0 GERBANG LULUS ══════════════════════════════════ -->
+  <section class="slide kq s05" data-slide>
+    <div class="eyebrow">K0 · Gerbang lulus<span class="sp"><span class="pg">panduan K0 §4</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name">Satu baris. <b>Sebelas baris keluar.</b><span class="sub">dijalankan dari ~/venturo-benefit-survey</span></div>
+        <div class="anchor"><span class="ck">🎯</span><span><span class="lb">Baris kelima adalah nyawanya</span>Ia harus berbunyi <b>latihan</b>. Kalau ia <b>kosong</b>, <code>git switch -c latihan</code> terlewat dan kamu masih di detached HEAD — jalankan <b>sekarang</b>, sebelum K3 menulis file.</span></div>
+        <div class="warnbox"><span class="h">Baris keempat kosong (command not found)?</span>Terminal ini masih memakai PATH lama — ia dibuka sebelum K0 Langkah 4. Jalankan <code>exec $SHELL -l</code> di sini, lalu ulangi gerbangnya.</div>
+        <div class="note-s">Yang gagal di satu baris: catat namanya, lanjutkan sesi, <b>bereskan saat jeda</b>. Tidak ada MCP server yang dipasang minggu ini — sisa w05 boleh dibiarkan.</div>
+      </div>
+      <div class="kq-r"><div class="term sm" data-term="k0gate"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 6 · PEMBUKA — TIGA GEJALA ═════════════════════════════ -->
+  <section class="slide s06 mid" data-slide>
+    <div class="eyebrow">Pembuka<span class="sp"><span class="pg">panduan Pembuka</span><span class="tb st">8 menit</span></span></div>
+    <div class="big-msg">Kita sudah lancar <span class="hl">memakai</span> Claude Code.<br>Yang belum kita lakukan adalah <span class="hl">mengukurnya</span>.</div>
+    <div class="msg-list">
+      <div class="ml"><span class="mk">1</span><span><b>Kita membayar ulang hal yang sama tiap sesi.</b> File yang sama dibaca lagi, arsitektur yang sama dijelaskan lagi — dari nol, tiap pagi.</span></div>
+      <div class="ml"><span class="mk">2</span><span><b>Konteks lahir kembali sebagai bayi tiap <code>/clear</code>.</b></span></div>
+      <div class="ml"><span class="mk">3</span><span><b>Alasan di balik kode menguap.</b> Kode memberi tahu <i>apa</i>. Ia tidak pernah memberi tahu <i>kenapa</i> — dan orang yang tahu kenapa sudah pindah tim.</span></div>
+    </div>
+    <div class="msg-note">Dibawakan <b>sambil unduhan K0 berjalan.</b> Peserta mendengarkan sambil melihat progress bar.</div>
+  </section>
+
+  <!-- ══ 7 · BENANG MERAH + PAPAN SKOR KOSONG ══════════════════ -->
+  <section class="slide s07 mid" data-slide>
+    <div class="eyebrow">Benang merah · satu pertanyaan, diukur dua kali<span class="sp"><span class="pg">tulis papan skor sekarang</span></span></div>
+    <div class="bbq">
+      <span class="h">🧭 Pertanyaan Tulang Punggung</span>
+      <div class="q">"Kalau aku ubah cara <b>submitSurvey</b> mengirim jawaban — <b>apa saja yang ikut rusak</b>, <b>kenapa dulu dirancang begitu</b>, dan <b>berapa token</b> yang aku bakar untuk tahu itu?"</div>
+    </div>
+    <div class="board" style="margin-top:24px">
+      <div class="br"><span class="bk">A</span><span class="bt">Token menjawab sendiri <b>dari nol</b></span><span class="bv">…………</span><span class="bw">K1</span></div>
+      <div class="br"><span class="bk">B</span><span class="bt">Token menjawab <b>lewat sesi sebelah</b></span><span class="bv">…………</span><span class="bw">K4</span></div>
+      <div class="br"><span class="bk">C</span><span class="bt">Selisih <b>A − B</b></span><span class="bv">…………</span><span class="bw">Penutup</span></div>
+      <div class="br"><span class="bk">D</span><span class="bt">Jawaban yang <b>hanya vault punya</b></span><span class="bv">…………</span><span class="bw">K7</span></div>
+    </div>
+    <div class="board-note"><span class="hl">C</span> adalah alasan seluruh sesi ini ada. <span class="hl">D</span> adalah alasan C saja tidak cukup.</div>
+  </section>
+
+  <!-- ══ 8 · PETA TUJUH KARTU ══════════════════════════════════ -->
+  <section class="slide dense s08" data-slide>
+    <div class="eyebrow">Peta sesi<span class="sp"><span class="pg">~136 menit + cadangan</span></span></div>
+    <div class="mapc">
+      <div class="mr"><span class="mk"><span class="arm a">A</span>K1</span><span class="mt">Harga Satu Pertanyaan</span><span class="md2">/context · /cost · codeburn overview</span><span class="mm">12'</span></div>
+      <div class="mr"><span class="mk"><span class="arm a">A</span>K2</span><span class="mt">Token yang Terbuang</span><span class="md2">yield · context --list · guard install</span><span class="mm">8'</span></div>
+      <div class="mr"><span class="mk"><span class="arm a">A</span>K3</span><span class="mt">Aturan yang Datang Saat Dibutuhkan</span><span class="md2">path-scoped rules</span><span class="mm">15'</span></div>
+      <div class="mr hi"><span class="mk"><span class="arm b">B</span>K4</span><span class="mt">Ingatan yang Selamat dari <code>/clear</code> + <b>Dua Terminal</b></span><span class="md2">auto-memory · /peers · SendMessage</span><span class="mm">18'</span></div>
+      <div class="mr brk"><span class="mk">☕</span><span class="mt">Jeda</span><span class="md2">/plugin install grademe@venturo-tools</span><span class="mm">5'</span></div>
+      <div class="mr"><span class="mk"><span class="arm b">B</span>K5</span><span class="mt">Graf Kode</span><span class="md2">graphify extract · query · affected · explain</span><span class="mm">18'</span></div>
+      <div class="mr"><span class="mk"><span class="arm b">B</span>K6</span><span class="mt">Graf yang Selalu Segar</span><span class="md2">god-nodes · hook install</span><span class="mm">8'</span></div>
+      <div class="mr"><span class="mk"><span class="arm c">C</span>K7</span><span class="mt">2nd Brain: Catatan Jadi Graf</span><span class="md2">/graphify --obsidian · global add</span><span class="mm">22'</span></div>
+      <div class="mr brk"><span class="mk">·</span><span class="mt">Penutup</span><span class="md2">papan skor ditutup · /grademe · tantangan besok pagi</span><span class="mm">10'</span></div>
+    </div>
+    <div class="note-s" style="font-size:20px;margin-top:16px">Sudah lewat: <b>K0</b> 12' dan <b>Pembuka</b> 8'. Baris <b>B papan skor</b> lahir di <b>K4</b> — bukan di K5. Itu bukan salah ketik; alasannya kita lihat sendiri di kartu K5.</div>
+  </section>
+
+  <!-- ══ 9 · K1 LANGKAH 1 — CARA BIASA ═════════════════════════ -->
+  <section class="slide kq s09" data-slide>
+    <div class="eyebrow">K1 · Harga Satu Pertanyaan<span class="sp"><span class="pg">panduan K1 L1</span><span class="tb">12 menit</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name">Ajukan pertanyaannya dengan <b>cara biasa</b><span class="sub">"Telusuri sendiri filenya."</span></div>
+        <div class="card-line"><span class="card-tag nt">KENAPA</span><span>Context window bukan ruang gratis: ia <b>memori kerja berbayar</b> yang diisi ulang setiap turn. Sebelum menghemat apa pun, kita butuh <b>satu angka jujur</b>.</span></div>
+        <div class="anchor"><span class="ck">✓</span><span><span class="lb">Anchor</span>Baris <code>Searched for 3 patterns, read 7 files, ran 2 shell commands</code> = <b>12 tool call</b>. Tujuh file itu masuk context <b>utuh</b>, dan tetap di sana sampai sesi berakhir — <b>dibayar ulang setiap giliran berikutnya.</b></span></div>
+        <div class="note-s">Claude Code 2.1.229 meringkas tool call jadi satu baris; 2.1.224 menampilkannya satu per satu (<code>● Read(...)</code>). Dua-duanya benar — yang dihitung <b>jumlah file</b>, bukan bentuk tampilannya.</div>
+      </div>
+      <div class="kq-r"><div class="term sm" data-term="k1l1"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 10 · K1 — UKUR ONGKOSNYA (DUA SESI) ═══════════════════ -->
+  <section class="slide dense s10" data-slide>
+    <div class="eyebrow">K1 · Ukur ongkosnya<span class="sp"><span class="pg">panduan K1 L2–L3</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="msg-top" style="margin-bottom:14px">Dua tempat berbeda: <b>di dalam sesi claude</b> untuk satu pertanyaan, dan <b>terminal biasa</b> untuk pola sepekan.</div>
+    <div class="dual" data-dual="k1dual"></div>
+    <div class="dual-foot">
+      <span class="dstep-pill" data-dpill>langkah 0 / 3</span>
+      <span class="dfx">🎯 <b>Baris A papan skor = Messages: 37,7k.</b> Tata letaknya berbeda antar-versi (2.1.229 panel, 2.1.224 tabel <code>## Context Usage</code>) — barisnya sama.</span>
+      <span class="dfx">✓ <b>Cache hit 100% mengukur diskon, bukan pemakaian.</b> Context gemuk yang di-cache tetap dibayar tiap turn.</span>
+    </div>
+  </section>
+
+<script type="application/json" class="term-data">
+{
+  "k2a": {
+    "title": "Terminal — codeburn", "cwd": "~/venturo-benefit-survey", "size": "sm",
+    "steps": [
+      { "w": "shell", "cmd": "codeburn yield",
+        "out": "  Analyzing yield for Last 7 Days...\n\nProductive:     $0.00 (0%) - 0 sessions shipped to main\nReverted:       $0.00 (0%) - 0 sessions were reverted\n» Abandoned:    $261.38 (100%) - 190 sessions never committed\nAmbiguous:      $0.00 (0%) - 0 sessions lost commits to concurrent sessions\n\nAttribution: timestamp-window based (heuristic)\n\nTotal:        $261.38     - 190 sessions",
+        "note": "Satuannya dolar, bukan persen token." },
+      { "w": "shell", "cmd": "codeburn context --list",
+        "out": "  Recent Claude Code sessions\n\n  04528ecf     1.1MB   0m ago  survey   Dry run testing week 6…\n  2668e186     0.2MB   8m ago  survey\n  cc4f98f5     0.1MB  15m ago  survey\n  ...\n\n  codeburn context <id> to inspect one",
+        "note": "Yang keluar: daftar sesi + ukuran transkripnya — bukan komposisi context per kategori. Kolom ketiga = nama folder proyek." }
+    ]
+  },
+  "k2b": {
+    "title": "Terminal — pagar anggaran", "cwd": "~/venturo-benefit-survey", "size": "md",
+    "steps": [
+      { "w": "shell", "cmd": "codeburn guard install",
+        "out": "  Installed 93ea31d1  Install codeburn guard hooks into\n                      <repo>/.claude/settings.json\n    Undo anytime: codeburn act undo 93ea31d1\n» Flagged 44 projects for session openers.",
+        "note": "Catat ID undo-nya." }
+    ]
+  },
+  "k3ins": {
+    "title": "Terminal — pasang aturan & alat bukti", "cwd": "~/venturo-benefit-survey", "size": "xs",
+    "steps": [
+      { "w": "shell",
+        "cmd": "mkdir -p .claude/rules .claude/hooks\ncp assets/w06/rules/hooks-and-types.md   .claude/rules/\ncp assets/w06/hooks/log-instructions.sh  .claude/hooks/\nchmod +x .claude/hooks/log-instructions.sh",
+        "note": "Aset ini ikut ter-clone, tapi sengaja belum aktif sampai kamu menyalinnya sendiri — itulah sebabnya LENGAN A nanti benar-benar bersih." },
+      { "w": "shell", "cmd": "head -5 .claude/rules/hooks-and-types.md",
+        "out": "---\n» paths: [\"src/hooks/*.ts\", \"src/types/*.ts\"]\n---\n\n# Aturan khusus hooks & types" },
+      { "w": "edit", "cmd": ".claude/settings.json\n\n{\n  \"hooks\": {\n    \"InstructionsLoaded\": [\n      { \"hooks\": [\n          { \"type\": \"command\",\n            \"command\": \"$CLAUDE_PROJECT_DIR/.claude/hooks/log-instructions.sh\" }\n      ] }\n    ]\n  }\n}",
+        "note": "Kalau guard install di K2 sudah membuat blok hooks — GABUNGKAN, jangan menimpa file." }
+    ]
+  },
+  "k3dual": {
+    "t1": { "title": "LENGAN A — file di LUAR scope", "cwd": "~/venturo-benefit-survey" },
+    "t2": { "title": "LENGAN B — file di DALAM scope", "cwd": "~/venturo-benefit-survey" },
+    "steps": [
+      { "t": 1, "w": "shell", "cmd": ": > .claude/rules-load.log        # kosongkan supaya bacaan bersih\nclaude" },
+      { "t": 1, "w": "claude", "cmd": "Baca src/config/survey.config.ts, sebutkan isinya satu kalimat.\nLalu sebutkan aturan proyek apa yang sedang berlaku untuk file ini.",
+        "note": "Ctrl-D untuk keluar." },
+      { "t": 1, "w": "shell", "cmd": "cat .claude/rules-load.log",
+        "out": "20:14:22  session_start   User     ~/.claude/CLAUDE.md",
+        "note": "Satu baris. Hanya CLAUDE.md global — file aturan tidak dimuat, tidak dibaca, TIDAK DIBAYAR." },
+      { "t": 2, "w": "shell", "cmd": "claude" },
+      { "t": 2, "w": "claude", "cmd": "Baca src/types/survey.ts, sebutkan isinya satu kalimat.\nLalu sebutkan aturan proyek apa yang sedang berlaku untuk file ini.",
+        "note": "File pengganti dipilih setara — ukuran dan jenisnya sebanding. Yang berubah cuma satu variabel: alamat file." },
+      { "t": 2, "w": "shell", "cmd": "cat .claude/rules-load.log",
+        "out": "20:14:22  session_start   User     ~/.claude/CLAUDE.md\n20:14:34  session_start   User     ~/.claude/CLAUDE.md\n» 20:14:41  path_glob_match Project  .claude/rules/hooks-and-types.md   <- dipicu: src/types/survey.ts",
+        "note": "Baris ketiga menyebut tiga hal: ALASAN muat (path_glob_match), FILE ATURAN mana, dan FILE PEMICUnya." }
+    ]
+  },
+  "k4dual": {
+    "t1": { "title": "T1 — sesi claude", "cwd": "~/venturo-benefit-survey", "w": "claude" },
+    "t2": { "title": "T2 — terminal biasa", "cwd": "~", "w": "shell" },
+    "steps": [
+      { "t": 2, "w": "shell", "cmd": "ls ~/.claude/projects/ | head",
+        "out": "-Users-kly-projects-venturo-benefit-survey",
+        "note": "Nama foldernya = path proyekmu dengan / diganti -." },
+      { "t": 1, "w": "claude", "cmd": "Ingat ini untuk seterusnya: di repo ini, urutan benefit diacak per sesi,\njadi draft yang dipulihkan wajib menyimpan urutan acaknya juga —\nkalau tidak, kartu berpindah posisi setelah refresh." },
+      { "t": 1, "w": "slash", "cmd": "/clear", "note": "Percakapan hilang. Disk tidak." },
+      { "t": 1, "w": "claude", "cmd": "Apa yang perlu kuperhatikan soal draft dan urutan benefit di repo ini?\nJawab dari ingatanmu saja — jangan membaca file apa pun.",
+        "out": "Dari ingatanku, ada satu hal yang tercatat soal ini:\n\nDraft restore harus mempertahankan urutan shuffle. Benefit di-shuffle per\nsesi. Kalau draft yang dipulihkan melakukan shuffle ulang, kartu-kartunya\nakan \"meloncat\" posisinya setelah user refresh.",
+        "note": "Nol tool call." },
+      { "t": 2, "w": "shell", "cmd": "ls ~/.claude/projects/*venturo-benefit-survey*/memory/",
+        "out": "MEMORY.md\ndraft-restore-must-persist-shuffle-order.md",
+        "note": "Nama file kedua dikarang Claude sendiri — di mesin peserta ia berbeda-beda dan biasanya berbahasa Inggris." }
+    ]
+  },
+  "k4peers": {
+    "t1": { "title": "T1 — Terminal Kerja", "cwd": "~/venturo-benefit-survey" },
+    "t2": { "title": "T2 — Terminal Audit", "cwd": "~/venturo-benefit-survey" },
+    "steps": [
+      { "t": 1, "w": "claude",
+        "cmd": "Telusuri submitSurvey dan retrySubmit di src/hooks/useSurveyState.ts,\njelaskan bagaimana keduanya menangani kegagalan submit.",
+        "note": "Didahului `claude` dari folder repo. Sesudah ini T1 PUNYA konteks — itu modal seluruh langkah berikutnya." },
+      { "t": 2, "w": "shell", "cmd": "claude",
+        "note": "Terminal kedua, folder yang sama, sesi yang benar-benar baru." },
+      { "t": 2, "w": "slash", "cmd": "/peers",
+        "out": "[idle]     ·  venturo-benefit-survey-2d          ·  /tmp/w06-tag/venturo-benefit-survey  ·  started 2m ago\n[offline]  ·  klys-mbp-4-snazzy-hickey           ·  Remote Control\n[idle]     ·  Project requirement documentation  ·  cloud",
+        "note": "Di mesin uji keluar 15 baris, campur [idle]/[offline]. Yang dicari cuma baris dengan folder repo latihan — itulah T1. /peers = alias /list-agents." },
+      { "t": 2, "w": "claude",
+        "cmd": "Tanya sesi Claude satunya yang sedang membuka repo ini: apakah retrySubmit\nmemakai payload yang sama dengan submitSurvey? Aku tidak mau membaca filenya sendiri.",
+        "out": "● ListAgents\n● ToolSearch (query: \"select:SendMessage\")\n● SendMessage (to: venturo-benefit-survey-2d)\n  ⎿ 'venturo-benefit-survey-2d' is not an agent in this conversation.\n    Re-send with the ref to confirm you mean:\n      venturo-benefit-survey-2d [91079c] — Claude session, on this machine, active 2m ago\n» ● SendMessage (to: venturo-benefit-survey-2d [91079c])\n  ⎿ \"Tanya soal payload retrySubmit vs submitSurvey\" → venturo-benefit-survey-2d\n\n⏺ Pertanyaan sudah dikirim ke sesi venturo-benefit-survey-2d. Aku menunggu\n  balasannya dan tidak membaca file sendiri.",
+        "note": "Kalimat biasa, bukan perintah. Giliran pertama: KIRIM, bukan jawab. Empat panggilan tool, bukan satu." },
+      { "t": 1, "w": "read", "cmd": "(pesan masuk — muncul begitu saja di layar T1)",
+        "out": "● Sesi lain menanyakan apakah retrySubmit mengirim payload yang sama dengan\n  submitSurvey. Sudah kubalas — ringkasannya: sama, identik field-per-field.\n  retrySubmit (useSurveyState.ts:159-161) tidak menyusun payload sendiri; ia\n  hanya memanggil ulang submitSurvey.",
+        "note": "T1 menjawab tanpa disuruh, dari konteks yang sudah ia punya." },
+      { "t": 2, "w": "read", "cmd": "(balasan mendarat sebagai giliran baru, beberapa detik kemudian)",
+        "out": "⏺ Sama, identik field-per-field.\n  - src/hooks/useSurveyState.ts:159-161 — retrySubmit, hanya memanggil ulang\n    submitSurvey(state.stayReason, state.leaveReason)\n  - src/hooks/useSurveyState.ts:113-132 — submitSurvey, tempat payload dibangun\n\n  Detail yang mereka cek:\n  - stayReason/leaveReason: state menyimpan nilai mentah, payload memakai\n    .trim(). Saat retry nilai mentah itu di-trim lagi — karena trim() idempoten,\n    hasilnya sama persis.\n  - Urutan key JSON juga sama, jadi hasil JSON.stringify byte-identical.\n\n  Catatan tambahan yang mereka angkat: justru karena identik, payload tidak\n  punya penanda percobaan ke-2. Digabung dengan mode: 'no-cors' (:140), server\n  tidak bisa membedakan retry dari submission baru. Titik ubahnya :124-132.",
+        "note": "\"yang mereka angkat\" — T2 meneruskan temuan yang tidak pernah ia minta. Dan T2 tidak pernah membuka satu file pun." },
+      { "t": 2, "w": "slash", "cmd": "/context",
+        "out": "» ⛁ Messages: 20.9k tokens (11.0%)\n⛶ Free space: 106.5k (56.0%)",
+        "note": "Inilah baris B papan skor." }
+    ]
+  },
+  "k5dual": {
+    "t1": { "title": "T3 — vault (lepas & tinggalkan)", "cwd": "~/venturo-brain" },
+    "t2": { "title": "Terminal repo — BUILD graf kode", "cwd": "~/venturo-benefit-survey", "w": "shell" },
+    "steps": [
+      { "t": 1, "w": "shell", "cmd": "cd ~/venturo-brain && claude" },
+      { "t": 1, "w": "slash", "cmd": "/graphify ~/venturo-brain --obsidian --obsidian-dir ~/venturo-brain/_graph",
+        "note": "Butuh ±8 menit. K5 + K6 memberinya 26 menit. Biarkan berjalan — jangan ditonton, jangan dijelaskan sekarang." },
+      { "t": 2, "w": "shell", "cmd": "graphify extract . --code-only",
+        "out": "[graphify extract] --code-only: skipping 36 non-code file(s) — no LLM extraction\n[graphify extract] found 30 code, 0 docs, 0 papers, 0 images\n[graphify extract] AST extraction on 30 code files...\n  warning: 4 source file(s) produced zero nodes and are absent from the graph:\n  settings.json, hooks.json, hooks.json, config.local.json.\n» [graphify extract] wrote graphify-out/graph.json: 162 nodes, 207 edges, 14 communities",
+        "note": "3,3 detik. Tidak ada progress bar — perintahnya selesai sebelum sempat terlihat. Baris warning soal file setelan itu normal." }
+    ]
+  },
+  "k5use": {
+    "title": "Terminal — tiga perintah harian", "cwd": "~/venturo-benefit-survey", "size": "xs",
+    "steps": [
+      { "w": "shell", "cmd": "graphify query \"apa yang terpengaruh kalau useSurveyState diubah\" --budget 1500",
+        "out": "Traversal: BFS depth=2 | Start: ['useSurveyState()'] | 28 nodes found\nNODE useSurveyState() [src=src/hooks/useSurveyState.ts loc=L9 community=0]\nNODE App.tsx …  NODE Gameplay.tsx …  NODE survey.config.ts …   (28 baris)",
+        "note": "(a) menjawab pertanyaan, dengan batas token yang KAMU tentukan sendiri" },
+      { "w": "shell", "cmd": "graphify affected \"useSurveyState\"",
+        "out": "Affected nodes for useSurveyState()\nRelations: calls, indirect_call, references, imports, imports_from, …\nDepth: 2\n- App() [calls] src/App.tsx:L21\n- App.tsx [imports] src/App.tsx:L1\n- main.tsx [imports] src/main.tsx:L4",
+        "note": "(b) radius ledakan sebelum mengubah sesuatu" },
+      { "w": "shell", "cmd": "graphify explain \"useSurveyState\"",
+        "out": "Node: useSurveyState()\n  Source:    src/hooks/useSurveyState.ts L9\n  Degree:    3\nConnections (3):\n  <-- App.tsx [imports] src/App.tsx:L1\n  <-- useSurveyState.ts [contains] src/hooks/useSurveyState.ts:L9\n  <-- App() [calls] src/App.tsx:L21",
+        "note": "(c) orientasi cepat di simbol yang asing" }
+    ]
+  },
+  "k5no": {
+    "title": "Kalau tetap dicoba di depan kelas", "size": "md",
+    "steps": [
+      { "w": "read", "cmd": "graphify query / affected \"submitSurvey\"",
+        "out": "query    → No matching nodes found.\naffected → No unique node match for submitSurvey" }
+    ]
+  }
+}
+</script>
+
+  <!-- ══ 11 · K2 — KE MANA TOKEN PERGI ═════════════════════════ -->
+  <section class="slide kq s11" data-slide>
+    <div class="eyebrow">K2 · Token yang Terbuang<span class="sp"><span class="pg">panduan K2 L1–L2</span><span class="tb">8 menit</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name">Yang rugi bukan token yang dibakar<span class="sub">…tapi token yang tidak menghasilkan apa-apa</span></div>
+        <div class="warnbox"><span class="h">Siapkan diri untuk 100% Abandoned</span>Atribusinya <b>heuristik berbasis jendela waktu</b>: sesi yang tidak berujung <code>git commit</code> di repo yang sama dihitung terbuang — termasuk semua sesi riset, review, dan tulis-menulis. <b>Jangan</b> bacakan sebagai <i>"kerjamu sia-sia"</i>. Bacakan apa adanya: <i>"alat ini hanya bisa melihat commit; semua yang bukan commit tampak seperti nol baginya."</i></div>
+        <div class="anchor"><span class="ck">✓</span><span><span class="lb">Anchor</span>Bagian <b>Abandoned</b> hampir selalu sesi eksplorasi — <b>membaca kode untuk memahami sesuatu, lalu ditutup.</b> Itu persis pekerjaan yang kita pindahkan ke graf di <b>K5</b>.</span></div>
+        <div class="note-s">Pakai <code>yield</code> di akhir minggu sebagai <b>cermin</b>, bukan rapor untuk menilai orang.</div>
+      </div>
+      <div class="kq-r"><div class="term sm" data-term="k2a"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 12 · K2 — PAGAR ANGGARAN ══════════════════════════════ -->
+  <section class="slide kq s12" data-slide>
+    <div class="eyebrow">K2 · Pasang pagar anggaran<span class="sp"><span class="pg">panduan K2 L3</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name">Angka <b>44</b> itu bukan salah baca<span class="sub">guard tidak berhenti di repo ini</span></div>
+        <div class="card-line"><span class="card-tag nt">ARTI</span><span><b>44 = jumlah proyek lain di mesinmu</b> yang ikut ditandai untuk session opener.</span></div>
+        <div class="warnbox"><span class="h">Inilah kenapa K0 Langkah 4 ada</span>Hook yang dipasang memanggil <code>codeburn</code> <b>tanpa npx</b>. Kalau kamu melewatkan langkah itu, seluruh sisa sesi penuh teks merah — penawarnya <code>npm i -g codeburn</code> atau <code>codeburn act undo &lt;ID&gt;</code>.</div>
+        <div class="warnbox"><span class="h">⚡ Escape hatch</span><code>codeburn optimize --apply</code> bisa membersihkan skill mati, <b>tapi ia interaktif dan mengubah setelan pribadimu</b> — jangan dijalankan di kelas.</div>
+        <div class="beat"><span class="h">🌉 Transfer</span><div class="q">Kalau seperempat token timmu habis di sesi tanpa commit, apakah masalahnya <b>orangnya</b> — atau karena mereka <b>tidak punya cara murah untuk sekadar memahami kode?</b></div></div>
+      </div>
+      <div class="kq-r"><div class="term md" data-term="k2b"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 13 · K3 — PREMIS + PASANG ═════════════════════════════ -->
+  <section class="slide kq s13" data-slide>
+    <div class="eyebrow">K3 · Aturan yang Datang Saat Dibutuhkan<span class="sp"><span class="pg">panduan K3 L1–L2</span><span class="tb">15 menit</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name"><code>CLAUDE.md</code> dimuat di <b>setiap</b> sesi<span class="sub">tanpa peduli kamu sedang menyentuh file apa</span></div>
+        <div class="card-line"><span class="card-tag nt">PREMIS</span><span>Makin banyak aturan di sana, makin besar <b>ongkos tetap</b> sepanjang hari. <b>Path-scoped rules</b> memindahkan aturan spesifik ke <code>.claude/rules/*.md</code> dengan frontmatter <code>paths:</code> — dan ia <b>hanya</b> masuk context saat Claude menyentuh file yang cocok.</span></div>
+        <div class="card-line"><span class="card-tag ok">ATURAN</span><span><code>.claude/rules/hooks-and-types.md</code> — nyawanya di frontmatter <code>paths:</code>. Itulah <b>alamat</b> si aturan.</span></div>
+        <div class="card-line"><span class="card-tag ok">BUKTI</span><span>Hook <code>InstructionsLoaded</code> menulis <b>setiap</b> instruksi yang dimuat ke <code>.claude/rules-load.log</code>. Kartu ini <b>bukan soal percaya</b> — kita akan melihatnya masuk dan tidak masuk.</span></div>
+        <div class="warnbox"><span class="h">⚡ Escape hatch</span>Log kosong di kedua lengan? Cek berurutan: (1) <code>chmod +x</code> sudah jalan? (2) <code>python3</code> ada di PATH? (3) blok <code>hooks</code> valid JSON — <b>satu koma nyasar membuat seluruh blok diabaikan diam-diam</b>. Payload mentah selalu tersimpan di <code>.claude/rules-load.jsonl</code>.</div>
+        <div class="note-s"><b>JANGAN</b> pindahkan aturan yang berlaku di seluruh repo (gaya commit, bahasa komunikasi) — itu memang tempatnya di <code>CLAUDE.md</code>.</div>
+      </div>
+      <div class="kq-r"><div class="term xs" data-term="k3ins"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 14 · K3 — DUA LENGAN BERDAMPINGAN ═════════════════════ -->
+  <section class="slide dense s14" data-slide>
+    <div class="eyebrow">K3 · Dua lengan, satu variabel yang berubah<span class="sp"><span class="pg">panduan K3 L3–L5</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="msg-top" style="margin-bottom:14px">Aturan sama, repo sama, sesi sama panjang. Pembedanya cuma <b>file yang disentuh</b>: <code>src/config/survey.config.ts</code> lawan <code>src/types/survey.ts</code>.</div>
+    <div class="dual short" data-dual="k3dual"></div>
+    <div class="dual-foot">
+      <span class="dstep-pill" data-dpill>langkah 0 / 6</span>
+      <span class="dfx">🎯 <b>Buktinya biner.</b> Perhatikan juga baris <code>session_start</code> yang berulang tiap sesi: itulah <code>CLAUDE.md</code> — ongkos tetap yang kamu bayar setiap kali membuka Claude.</span>
+      <span class="dfx">✓ <b>Bukti perilaku, bukan cuma log.</b> LENGAN A menjawab isi file tanpa menyinggung aturan apa pun. LENGAN B menjawab isi file <b>lalu menambahkan sendiri</b>: <i>"Catatan: file ini melanggar aturan proyek di .claude/rules/hooks-and-types.md…"</i> — log membuktikan aturannya <b>masuk</b>, jawaban membuktikan ia <b>dipakai</b>.</span>
+      <span class="dfx">🌉 <b>Transfer:</b> berapa baris <code>CLAUDE.md</code> di repo utamamu yang sebenarnya hanya relevan untuk satu folder — tapi dibayar di setiap sesi, oleh setiap orang, setiap hari?</span>
+    </div>
+  </section>
+
+  <!-- ══ 15 · K4 — INGATAN YANG SELAMAT DARI /clear ═════════════ -->
+  <section class="slide dense s15" data-slide>
+    <div class="eyebrow">K4 · Ingatan yang selamat dari <span class="lc">/clear</span><span class="sp"><span class="pg">panduan K4 L1–L3</span><span class="tb">18 menit</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="msg-top" style="margin-bottom:14px">Dua lapis yang sering tertukar: <code>CLAUDE.md</code> <b>ditulis manusia</b>, hidup di dalam repo, ikut git — <b>auto-memory</b> <b>ditulis Claude sendiri</b>, hidup <b>di luar repo</b>, tidak ikut git.</div>
+    <div class="dual mini" data-dual="k4dual"></div>
+    <div class="dual-foot">
+      <span class="dstep-pill" data-dpill>langkah 0 / 5</span>
+      <span class="dfx">🛑 <b>Jangan buang kalimat terakhirnya.</b> Tanpa <i>"Jawab dari ingatanmu saja — jangan membaca file apa pun"</i>, di dry run Claude menjawab dengan <b>7 tool call</b> dan menulis <i>"sudah kuverifikasi ke kode"</i>. Jawabannya tetap benar, <b>tapi buktinya hangus</b>.</span>
+      <span class="dfx">✓ <code>/clear</code> menghapus <b>percakapan</b>, bukan <b>disk</b> — itu sebabnya ingatan ini selamat, dan juga sebabnya ia <b>tidak</b> ikut ke laptop rekanmu. Isinya di <code>~/.claude/projects/&lt;slug&gt;/memory/</code>, <b>bukan</b> <code>MEMORY.md</code> di dalam repo. Bawaan 2.1.224+ — tidak ada yang perlu dipasang. <b>JANGAN</b> menyimpan rahasia di sana.</span>
+    </div>
+  </section>
+
+  <!-- ══ 16 · K4 — DUA TERMINAL, SATU PERCAKAPAN ═══════════════ -->
+  <section class="slide dense s16" data-slide>
+    <div class="eyebrow">K4 · Dua terminal, satu percakapan<span class="sp"><span class="pg">panduan K4 L4</span><span class="tb">← baris B</span><span class="who watch"><span class="ic">👀</span>PRESENTER</span></span></div>
+    <div class="msg-top" style="margin-bottom:14px">Ini yang paling sering disalahpahami sebagai <b>perintah CLI</b>. <code>ListAgents</code> dan <code>SendMessage</code> adalah <b class="hl">tool yang dipanggil model sendiri dari bahasa natural</b> — tidak ada flag, tidak ada subcommand.</div>
+    <div class="dual" data-dual="k4peers"></div>
+    <div class="dual-foot">
+      <span class="dstep-pill" data-dpill>langkah 0 / 7</span>
+      <span class="dfx">Yang menyala adalah terminal yang sedang bicara. <b>Tekan → untuk melangkah.</b></span>
+    </div>
+  </section>
+
+  <!-- ══ 17 · K4 — DUA KEJUTAN + BARIS B ═══════════════════════ -->
+  <section class="slide dense s17" data-slide>
+    <div class="eyebrow">K4 · Dua kejutan, satu angka, satu batas<span class="sp"><span class="pg">panduan K4 L4–§5</span></span></div>
+    <div class="arms">
+      <div class="ar">
+        <div class="arm-h"><span class="bg b">KEJUTAN 1</span><span class="fl"><b>SendMessage gagal sekali</b>, lalu berhasil</span></div>
+        <div class="card-line"><span class="card-tag no">TOLAK</span><span>Kiriman pertama ditolak: <i>"is not an agent in this conversation"</i>. <b>Nama sesi saja belum cukup</b> — harus disertai <b>ref</b> (<code>[91079c]</code>).</span></div>
+        <div class="card-line"><span class="card-tag ok">PULIH</span><span>Claude <b>membaca penolakan itu dan mengirim ulang sendiri.</b> Hitung saja: itu <b>empat</b> panggilan tool, bukan satu.</span></div>
+      </div>
+      <div class="ar">
+        <div class="arm-h"><span class="bg b">KEJUTAN 2</span><span class="fl"><b>Jawabannya tidak datang di giliran ini</b></span></div>
+        <div class="card-line"><span class="card-tag nt">TUNGGU</span><span>T2 hanya bilang <i>"sudah kukirim, aku menunggu."</i> Balasan T1 mendarat <b>beberapa detik kemudian sebagai pesan baru</b>.</span></div>
+        <div class="card-line"><span class="card-tag no">JANGAN</span><span>Jangan tutup terminal, dan <b>jangan mengetik ulang pertanyaannya.</b></span></div>
+      </div>
+    </div>
+    <div class="anchor" style="margin-top:18px"><span class="ck">🎯</span><span><span class="lb">Tulis di papan skor — baris B = 20,9k</span>T2 mendapat jawaban teknis yang akurat <b>tanpa membaca satu file pun</b>: <b class="accent">20,9k</b> lawan <b>37,7k</b> — sekitar <b>45% lebih murah</b> untuk pertanyaan yang sama, karena yang dipakai adalah konteks yang <b>sudah dibayar</b> sesi sebelah. Selisihnya <b>melebar</b> makin panjang konteks yang dipegang T1. Baris B lahir <b>di sini</b>, di K4 — bukan di K5.</span></div>
+    <div class="warnbox" style="margin-top:12px"><span class="h">Jangan jual berlebihan — dan sebut batasnya</span><code>ListAgents</code> + <code>ToolSearch</code> + <code>SendMessage</code> (dua kali) punya <b>ongkos nyata</b>: yang jujur dibandingkan <b>20,9k lawan 37,7k</b>, bukan <i>"nyaris nol"</i>. Ini <b>pola kerja</b>, bukan trik: satu sesi pemilik konteks, sesi lain bertanya kepadanya. Syaratnya: <b>macOS/Linux</b>, <b>user &amp; mesin yang sama</b>, sesi tujuan menerima pesan masuk (<code>crossSessionInbound</code>). Kelas memakai Bedrock/Vertex? <b>Kosongkan baris B</b> — jangan mengarang angka.</div>
+  </section>
+
+  <!-- ══ 18 · JEDA ═════════════════════════════════════════════ -->
+  <section class="slide chkpt s18" data-slide>
+    <div class="badge">☕ Jeda · 5 menit</div>
+    <div class="chk-q">Pastikan baris <span class="accent">A = 37,7k</span> dan <span class="accent">B = 20,9k</span><br>sudah terisi sebelum kita lanjut.</div>
+    <div class="chk-note">Satu perintah untuk yang belum: <code style="font-family:var(--mono);font-size:.8em">/plugin install grademe@venturo-tools</code></div>
+  </section>
+
+  <!-- ══ 19 · K5 — LEPAS BUILD K7 + BUILD GRAF KODE ════════════ -->
+  <section class="slide dense s19" data-slide>
+    <div class="eyebrow">K5 · Graf Kode<span class="sp"><span class="pg">panduan K5 §atas–L1</span><span class="tb">18 menit</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="msg-top" style="margin-bottom:14px">Terminal ketiga menyalakan build K7 lalu <b>ditinggalkan</b>; pekerjaan K5 berjalan di terminal repo. Ia butuh <b>±8 menit</b>, dan K5 + K6 memberinya <b>26 menit</b>.</div>
+    <div class="dual" data-dual="k5dual"></div>
+    <div class="dual-foot">
+      <span class="dstep-pill" data-dpill>langkah 0 / 3</span>
+      <span class="dfx">✓ <b>Tidak ada permintaan API key</b> di sisi kanan: ekstraksinya <b>AST</b>, <code>--code-only</code> melewatkan dokumen dan gambar. Pipeline penuh <code>/graphify</code> di kiri jauh lebih lama justru karena <b>ia mencerna dokumen</b>.</span>
+      <span class="dfx">⚡ <code>graphify --version</code> gagal? Orang itu melewatkan <b>K0 Langkah 3</b> — suruh jalankan <code>uv tool install --upgrade graphifyy -q &amp;&amp; graphify install</code> sementara kelas lanjut.</span>
+    </div>
+  </section>
+
+  <!-- ══ 20 · K5 — TIGA PERINTAH HARIAN ════════════════════════ -->
+  <section class="slide kq s20" data-slide>
+    <div class="eyebrow">K5 · Tiga perintah harian<span class="sp"><span class="pg">panduan K5 L2</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name">Jangkarnya <b>useSurveyState</b><span class="sub">bukan submitSurvey</span></div>
+        <div class="warnbox"><span class="h">🛑 Jangan ketik submitSurvey di depan kelas</span>Bukan bug: ekstraktor AST hanya membuat node untuk <b>deklarasi tingkat atas</b>. <code>submitSurvey</code> adalah <code>const submitSurvey = useCallback(...)</code> yang bersarang <b>di dalam</b> badan <code>useSurveyState</code> (<code>useSurveyState.ts:113</code>) — <b>0 dari 162 node</b> menyebutnya. Nasib yang sama menimpa <code>retrySubmit</code>.</div>
+        <div class="term xs" data-term="k5no" data-all style="margin-top:12px"></div>
+        <div class="anchor"><span class="ck">🎯</span><span><span class="lb">Ini pelajaran, bukan aib</span>Graf hanya tahu apa yang <b>diekstraksi</b>. <b><code>--budget 1500</code></b> adalah bagian terpenting kartu ini: kamu tidak lagi <i>berharap</i> jawaban muat, kamu <b>menentukan</b> berapa token yang boleh dipakai untuk menjawab.</span></div>
+      </div>
+      <div class="kq-r"><div class="term xs" data-term="k5use"></div></div>
+    </div>
+  </section>
+
+<script type="application/json" class="term-data">
+{
+  "k5auto": {
+    "title": "Terminal — otomatiskan + ukur", "cwd": "~/venturo-benefit-survey", "size": "sm",
+    "steps": [
+      { "w": "shell", "cmd": "graphify claude install",
+        "out": "graphify section written to <repo>/CLAUDE.md\n  .claude/settings.json  ->  PreToolUse hooks registered (Bash|Grep search + Read/Glob)\n\nClaude Code will now check the knowledge graph before answering\ncodebase questions and rebuild it after code changes." },
+      { "w": "shell", "cmd": "graphify benchmark",
+        "out": "graphify token reduction benchmark\n──────────────────────────────────────────────────\n  Corpus:          8,100 words → ~10,800 tokens (naive)\n  Graph:           162 nodes, 207 edges\n  Avg query cost:  ~1,452 tokens\n» Reduction:       7.4x fewer tokens per query",
+        "note": "Satuannya kelipatan, bukan persen." }
+    ]
+  },
+  "k6": {
+    "title": "Terminal — god-nodes & hook", "cwd": "~/venturo-benefit-survey", "size": "sm",
+    "steps": [
+      { "w": "shell", "cmd": "graphify god-nodes --top 10",
+        "out": "God nodes (most connected):\n  1. compilerOptions - 18 edges\n  2. compilerOptions - 15 edges\n  3. react - 11 edges\n  4. config - 9 edges\n  5. scripts - 5 edges\n  6. Benefit - 4 edges\n  7. plugins - 4 edges\n  8. GameplayProps - 3 edges\n  9. RatingOption - 3 edges\n» 10. App() - 3 edges",
+        "note": "useSurveyState() TIDAK masuk sepuluh besar — derajatnya cuma 3." },
+      { "w": "shell", "cmd": "graphify hook install\ngraphify hook status",
+        "out": "post-commit: installed\npost-checkout: installed\nmerge driver: registered",
+        "note": "Kedua perintah mencetak blok yang identik." }
+    ]
+  },
+  "k7dual": {
+    "t1": { "title": "Terminal — bahan mentahnya", "cwd": "~", "w": "shell" },
+    "t2": { "title": "T3 — yang dilepas sejak awal K5", "cwd": "~/venturo-brain", "w": "slash" },
+    "steps": [
+      { "t": 1, "w": "shell", "cmd": "ls ~/venturo-brain",
+        "out": "00-peta-vault.md\nhdr-001-submit-via-apps-script.md\nhdr-002-localstorage-bukan-indexeddb.md\nhdr-003-randomize-benefits.md\nhdr-004-gameplay-mode-tiga-mode.md\nhdr-005-priority-slots-sepuluh.md\nrfc-101-offline-queue.md\nrfc-102-pindah-ke-supabase.md\nrfc-103-mode-tim.md",
+        "note": "Lalu buka satu: head -20 hdr-001-submit-via-apps-script.md — paragraf mengalir, bukan data terstruktur. Justru itu intinya." },
+      { "t": 2, "w": "slash", "cmd": "/graphify ~/venturo-brain --obsidian --obsidian-dir ~/venturo-brain/_graph",
+        "out": "Graph complete. Outputs in ~/venturo-brain/graphify-out/\n\n  graph.html            - interactive graph, open in browser\n  GRAPH_REPORT.md       - audit report\n  graph.json            - raw graph data\n  _graph/               - Obsidian vault (35 notes + graph.canvas)\n\n» 28 nodes · 69 edges · 7 communities   (dari 9 berkas, ±2.944 kata)\nExtraction: 90% EXTRACTED · 7% INFERRED · 3% AMBIGUOUS",
+        "note": "Sudah matang sejak K5 — tidak ada yang perlu diketik ulang di sini, tinggal lihat hasilnya." }
+    ]
+  },
+  "k7q": {
+    "title": "Terminal — tanya hal yang kode tidak tahu", "cwd": "~/venturo-brain", "size": "xs",
+    "steps": [
+      { "w": "shell", "cmd": "cd ~/venturo-brain\ngraphify query \"kenapa submit lewat Google Apps Script, bukan API sendiri?\" --budget 1200",
+        "out": "Traversal: BFS depth=2 | Start: ['Google Apps Script Web App sebagai backend-pengganti',\n'HDR-001 — Kirim jawaban survei lewat Google Apps Script', 'submitEndpoint'] | 24 nodes found\n\n» NODE HDR-001 — Kirim jawaban survei lewat Google Apps Script [src=hdr-001-submit-via-apps-script.md]\n» NODE submitEndpoint [src=hdr-001-submit-via-apps-script.md community=Endpoint Submit & Migrasi]\nEDGE HDR-001 --references [EXTRACTED]--> submitEndpoint",
+        "note": "Dipotong — aslinya puluhan baris." },
+      { "w": "shell", "cmd": "graphify query \"fitur apa yang direncanakan tapi belum ada di kode?\" --budget 1200",
+        "out": "Traversal: BFS depth=2 | Start: ['RFC-103 — Mode tim: satu sesi, beberapa orang', …] | 28 nodes found\n» NODE RFC-101 — Antrian submit offline [src=rfc-101-offline-queue.md]\n» NODE RFC-102 — Pindah dari Apps Script ke Supabase [src=rfc-102-pindah-ke-supabase.md]",
+        "note": "28 dari 28 node — seluruh graf. Di vault sekecil ini penyaringannya nyaris nol." }
+    ]
+  },
+  "k7fin": {
+    "t1": { "title": "Terminal repo — daftarkan dua graf", "cwd": "<repo-latihan>", "w": "shell" },
+    "t2": { "title": "Claude — penutup Pertanyaan Tulang Punggung", "cwd": "<repo-latihan>", "w": "claude" },
+    "steps": [
+      { "t": 1, "w": "shell", "cmd": "graphify global add graphify-out/graph.json --as kode\ngraphify global add ~/venturo-brain/graphify-out/graph.json --as otak\ngraphify global list",
+        "out": "Global graph: ~/.graphify/global-graph.json\n  kode: 162 nodes, added 2026-08-12\n  otak: 28 nodes, added 2026-08-12",
+        "note": "Jalankan dari dalam repo latihan supaya tidak ada path yang di-hardcode." },
+      { "t": 2, "w": "claude", "cmd": "Kalau aku ganti submitEndpoint ke Supabase: file mana yang berubah,\ndan kenapa dulu pilihan itu ditolak?",
+        "out": "## Kenapa Supabase dulu ditolak\n\n» hdr-001-submit-via-apps-script.md:45 — ditolak PADA SAAT ITU, alasannya jadwal,\nbukan teknis: tim belum punya proyek Supabase yang jalan, dan mengurus akun baru\ndi tengah tenggat dua minggu bukan prioritas.\n\nKeputusan itu sudah ditinjau ulang di rfc-102-pindah-ke-supabase.md dan status\nbarunya DITUNDA, bukan ditolak.\n\n## File yang berubah\n\nRFC-102 mengklaim perubahan klien \"hanya menyentuh satu nilai konfigurasi\".\nKlaim itu tidak akurat:\n\n| .env / .env.example:8               | VITE_SUBMIT_ENDPOINT -> URL Supabase        |\n| src/config/survey.config.ts:15      | fallback default                            |\n| src/hooks/useSurveyState.ts:134-145 | inilah yang membatalkan klaim satu-baris    |\n| README.md:105,133                   | teks masih menyebut \"Google Apps Script\"    |\n\nMasalahnya: fetch-nya pakai mode: 'no-cors' — header apikey/Authorization yang\ndibutuhkan PostgREST akan diblokir, dan response opaque bikin 401/409 tetap\nmenampilkan layar \"completed\" ke responden.",
+        "note": "76 detik, 10 tool call. Dipotong. Bacakan pelan-pelan." }
+    ]
+  }
+}
+</script>
+
+  <!-- ══ 21 · K5 — OTOMATISKAN + ANGKA JUJUR ═══════════════════ -->
+  <section class="slide kq s21" data-slide>
+    <div class="eyebrow">K5 · Claude memakai graf tanpa diminta<span class="sp"><span class="pg">panduan K5 L3–L4</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name">Tiga hook, tiga sumber — <b>tidak bertabrakan</b></div>
+        <div class="card-line"><span class="card-tag ok">AMAN</span><span>graphify <b>menambahkan</b> dua entri <code>PreToolUse</code> di sebelah entri <b>codeburn guard</b> (K2); blok <code>SessionStart</code>, <code>Stop</code>, dan <code>InstructionsLoaded</code> (K3) <b>tidak tersentuh</b>. Sudah diuji. Perintah ini juga <b>membuat <code>CLAUDE.md</code> baru</b> — repo latihan aslinya tidak punya.</span></div>
+        <div class="warnbox"><span class="h">⚠️ Sebut batas 7.4x sekalian, jangan tunggu ditanya</span>Angka itu <b>teoretis dan milik graphify sendiri</b>: ongkos satu <code>query</code> dibanding membaca seluruh korpus. <b>Ia bukan pengukuran sesi Claude.</b></div>
+        <div class="anchor"><span class="ck">🎯</span><span><span class="lb">Yang kami ukur sungguhan — dan hasilnya datar</span>Pertanyaan yang sama, sekali <b>tanpa</b> graf (<b>35,0k</b>) dan sekali <b>sesudah</b> graf terpasang (<b>34,1k</b>). <b>Praktis tidak ada bedanya</b> — sebabnya jujur: repo ini cuma <b>30 file kode</b>, membaca langsung memang sudah murah. Itulah kenapa baris B diisi di <b>K4</b>, bukan di sini. Graf bukan penghemat token di repo kecil; ia penjawab <i>"apa saja yang ikut rusak"</i>, dan mulai membayar dirinya sendiri di <b>repo yang tidak muat dibaca</b>.</span></div>
+        <div class="note-s"><b>⚡ Escape hatch:</b> <code>extract</code> gagal karena file besar atau <code>.gitignore</code> aneh? Pakai <code>graphify update .</code>, atau <code>--no-cluster</code> untuk melewati tahap pengelompokan.</div>
+      </div>
+      <div class="kq-r"><div class="term sm" data-term="k5auto"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 22 · K6 — GOD NODES + HOOK ════════════════════════════ -->
+  <section class="slide kq s22" data-slide>
+    <div class="eyebrow">K6 · Graf yang Selalu Segar<span class="sp"><span class="pg">panduan K6 L1–L2</span><span class="tb">8 menit</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name">Sepuluh besar dikuasai <b>derau konfigurasi</b><span class="sub">…dan graf yang dibangun sekali akan basi di commit berikutnya</span></div>
+        <div class="warnbox"><span class="h">🛑 Bacakan apa adanya</span>Jangan janjikan <code>useSurveyState</code> di puncak. Yang naik: dua <code>compilerOptions</code> (dari dua <code>tsconfig</code>), <code>react</code>, <code>config</code>, <code>scripts</code>, <code>plugins</code>. <b><code>god-nodes</code> mengukur derajat, bukan kepentingan.</b> Lalu tanya kelas: <i>"di repo kalian yang 5.000 file, apa yang bakal naik ke puncak — dan apakah itu benar?"</i></div>
+        <div class="warnbox"><span class="h">⚠️ hook install juga menulis .gitattributes</span>Di akar repo, untuk mendaftarkan <b>merge driver</b> <code>graph.json</code>. Setelah ini <code class="nw">git status</code> menunjukkan berkas baru yang belum ter-track — <b>sebutkan sebelum ada yang mengira repo-nya kotor</b>. Repo memakai <b>husky</b>/<b>lefthook</b>? Panggil <code>graphify update .</code> dari hook yang sudah ada — jangan pasang dua manajer hook sekaligus.</div>
+        <div class="note-s"><b>PR, bukan materi kelas:</b> <code>graphify save-result --outcome dead_end</code> + <code>graphify reflect</code> mencatat penelusuran buntu supaya tidak diulang — deterministik, tanpa LLM, dan nilainya baru terasa setelah puluhan catatan.</div>
+        <div class="beat"><span class="h">🌉 Transfer</span><div class="q">Pengetahuan siapa yang hilang di timmu setiap kali seseorang menemukan <b>jalan buntu</b>, menyelesaikannya sendiri, lalu <b>tidak menuliskannya di mana pun?</b></div></div>
+      </div>
+      <div class="kq-r"><div class="term sm" data-term="k6"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 23 · K7 — BAHAN MENTAH + HASIL ════════════════════════ -->
+  <section class="slide dense s23" data-slide>
+    <div class="eyebrow">K7 · 2nd Brain — Catatan Jadi Graf<span class="sp"><span class="pg">panduan K7 L1–L2</span><span class="tb">22 menit</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="msg-top" style="margin-bottom:12px">Satu bagian Pertanyaan Tulang Punggung <b>tidak bisa dijawab kode</b>, semurah apa pun: <b class="hl">"kenapa dulu dirancang begitu?"</b> Kartu ini membalik arah enam kartu sebelumnya — bukan kode yang dijadikan graf, melainkan <b>catatan biasa yang tidak terstruktur</b>.</div>
+    <div class="dual mini" data-dual="k7dual"></div>
+    <div class="dual-foot">
+      <span class="dstep-pill" data-dpill>langkah 0 / 2</span>
+      <span class="dfx"><b>1 · WAKTU</b> terukur <b>483 detik (8'03") dalam 31 giliran</b>, itu pun dengan cache hangat — alasan ia dilepas sejak K5. &nbsp;<b>2 · KECIL</b> <b>28 node dari 9 catatan</b>; graphify sendiri memperingatkan <i>"…fits in a single context window. You may not need a graph."</i> Yang kita demokan <b>mekanismenya</b>, bukan penghematannya. &nbsp;<b>3 · KUNCI</b> <b>tidak ada API key di mana pun</b> — dijalankan dari dalam Claude Code, host agent sendiri yang jadi LLM (68.420 token input, dibayar langganan yang sudah kamu punya).</span>
+      <span class="dfx">⚠️ <b>Jebakan re-ingest — sudah dimitigasi.</b> <code>_graph/</code> ditulis <b>di dalam</b> vault sumber, jadi 35 catatan hasil generate ikut terbaca di jalan kedua: <b>45 berkas / 6.319 kata</b>, bukan <b>9 / 2.944</b>. Penawarnya <code>.graphifyignore</code> berisi <code>_graph/</code> — <b>sudah ikut di dalam aset</b>. Kalau hilang: <code class="nw">echo '_graph/' &gt; ~/venturo-brain/.graphifyignore</code></span>
+    </div>
+  </section>
+
+  <!-- ══ 24 · K7 — QUERY: BAHAN, BUKAN JAWABAN ═════════════════ -->
+  <section class="slide kq s24" data-slide>
+    <div class="eyebrow">K7 · Tanyakan hal yang kode tidak tahu<span class="sp"><span class="pg">panduan K7 L3</span><span class="tb">← baris D</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="card-name">🛑 Jangan bilang <i>"grafnya menjawab"</i><span class="sub">— ia tidak menjawab</span></div>
+        <div class="warnbox"><span class="h">query = penelusuran BFS, bukan mesin jawaban</span>Keluarannya daftar <code>NODE</code> dan <code>EDGE</code> mentah; <b>tidak ada satu pun kalimat prosa</b>. Yang mengubah daftar itu jadi jawaban adalah <b>Claude yang membacanya</b>.</div>
+        <div class="card-line"><span class="card-tag no">JUJUR</span><span>Pertanyaan 1 menarik <b>24 dari 28</b> node, pertanyaan 2 menarik <b>28 dari 28</b>. Kalau dibacakan berdampingan, kelas akan melihat keduanya nyaris sama — <b>dan mereka benar.</b></span></div>
+        <div class="anchor"><span class="ck">🎯</span><span><span class="lb">TULIS BARIS D — dan D bukan angka</span>Yang penting bukan bentuk keluarannya melainkan <b>asal-usulnya</b>: setiap NODE bersumber dari <code>hdr-*.md</code> dan <code>rfc-*.md</code> — <b>berkas yang tidak ada di dalam repo</b>. Graf kode tercanggih pun menjawab <i>"tidak ditemukan"</i>. <b>D = HDR + RFC</b>: <code>hdr-001-submit-via-apps-script.md</code>, <code>rfc-102-pindah-ke-supabase.md</code>.</span></div>
+      </div>
+      <div class="kq-r"><div class="term xs" data-term="k7q"></div></div>
+    </div>
+  </section>
+
+  <!-- ══ 25 · K7 — GABUNGKAN DUA OTAK + JAWABAN UTUH ═══════════ -->
+  <section class="slide dense s25" data-slide>
+    <div class="eyebrow">K7 · Gabungkan dua otak, lalu tutup pertanyaannya<span class="sp"><span class="pg">panduan K7 L4</span><span class="who cl"><span class="ic">🤖</span>CLAUDE JAWAB</span></span></div>
+    <div class="msg-top" style="margin-bottom:12px">Dua graf <b>terdaftar di satu tempat</b> — <b class="hl">bukan</b> dua graf yang menyatu. Yang menjembataninya tetap <b>Claude</b>, seperti di sisi kanan.</div>
+    <div class="dual mini" data-dual="k7fin"></div>
+    <div class="dual-foot">
+      <span class="dstep-pill" data-dpill>langkah 0 / 2</span>
+      <span class="dfx">🛑 <b>Ketahui batasnya sebelum kelas menemukannya.</b> <code>global add</code> hanya menyatukan node, <b>tidak pernah membuat edge antar-graf</b>: di dry run graf gabungan berisi 348 node dan 480 edge — <b>nol</b> yang menyeberang. Tidak ada perintah <code>graphify global query</code>; <code>global</code> cuma punya <code>add</code>/<code>remove</code>/<code>list</code>/<code>path</code>. Satu-satunya cara memakainya: <code class="nw">--graph ~/.graphify/global-graph.json</code> pada <code>query</code> biasa.</span>
+      <span class="dfx">⚠️ <b>Yang benar-benar terjadi di balik layar:</b> Claude <b>tidak menyentuh graf global sama sekali</b> untuk paruh "kenapa" — tiga <code>query</code>/<code>explain</code> ke graf <b>kode</b>, lalu <code>Read</code> biasa atas <code>hdr-001-*.md</code> dan <code>rfc-102-*.md</code>. Dituduh <i>"ini cuma grep dan baca file"</i>? <b>Benar — dan itu memang cara paling masuk akal untuk 9 catatan.</b> Ingin memaksa jalur graf terlihat? Jalankan prompt ini dari <code>~/venturo-brain</code>, bukan dari repo. Perhatikan juga: ia <b>membantah RFC-102</b> dengan bukti dari kode.</span>
+    </div>
+  </section>
+
+  <!-- ══ 26 · K7 — OBSIDIAN ════════════════════════════════════ -->
+  <section class="slide dense s26" data-slide>
+    <div class="eyebrow">K7 · Buka vault-nya di Obsidian<span class="sp"><span class="pg">panduan K7 L5</span><span class="who you"><span class="ic">🖐️</span>KAMU KLIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="steps col">
+          <div class="stp2"><span class="n">1</span><span>Obsidian → <b>Open folder as vault</b> → pilih <code>~/venturo-brain</code></span></div>
+          <div class="stp2"><span class="n">2</span><span>Buka <code>_graph/HDR-001 — Kirim jawaban survei lewat Google Apps Script.md</code></span></div>
+          <div class="stp2"><span class="n">3</span><span>Buka <b>Local Graph</b> — <b>bukan</b> Global Graph</span></div>
+        </div>
+        <div class="anchor"><span class="ck">✓</span><span><span class="lb">Anchor</span>Global Graph berisi ratusan node hanya menghasilkan <b>bola benang yang tidak terbaca</b>.</span></div>
+        <div class="beat"><span class="h">🌉 Transfer</span><div class="q">Keputusan arsitektur apa di proyekmu yang alasannya <b>hanya diketahui satu orang</b> — dan apa yang terjadi kalau minggu depan orang itu resign?</div></div>
+      </div>
+      <div class="kq-r">
+        <div class="warnbox"><span class="h">🛑 Buka berkas di dalam <code>_graph/</code>, bukan yang asli</span>Perbandingannya begini:</div>
+        <div class="board" style="max-width:900px">
+          <div class="br"><span class="bk">✗</span><span class="bt"><code>hdr-001-…md</code> asli</span><span class="bv">3 wikilink</span><span class="bw">ditulis tangan</span></div>
+          <div class="br on"><span class="bk">✓</span><span class="bt"><code>_graph/HDR-001 …md</code></span><span class="bv">8 wikilink</span><span class="bw">hasil ekstraksi</span></div>
+        </div>
+        <div class="note-s">Berkas asli memang punya tiga wikilink — tapi ketiganya <b>ditulis tangan sejak awal</b>, bukan hasil <code>/graphify</code>. Kalau kamu menunjukkan itu, yang kamu tunjukkan adalah catatan buatan manusia, dan <b>seseorang akan menyadarinya</b>.</div>
+        <div class="anchor"><span class="ck">🎯</span><span><span class="lb">Inilah nilai tambah yang sedang kamu demokan</span>Berkas di <code>_graph/</code> memuat simpul konsep yang <b>tidak pernah ada sebagai berkas sumber mana pun</b> — <code>[[submitEndpoint]]</code>, <code>[[Google Apps Script Web App sebagai backend-pengganti]]</code>. Tool ini <b>menemukan konsep</b>, bukan cuma menyambungkan nama berkas.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 27 · PENUTUP — PAPAN SKOR DITUTUP ═════════════════════ -->
+  <section class="slide s27 mid" data-slide>
+    <div class="eyebrow">Penutup · Papan skor ditutup<span class="sp"><span class="pg">panduan Penutup §1</span><span class="tb">10 menit</span></span></div>
+    <div class="board">
+      <div class="br on"><span class="bk">A</span><span class="bt">Token menjawab sendiri dari nol</span><span class="bv">37,7k</span><span class="bw">K1</span></div>
+      <div class="br on"><span class="bk">B</span><span class="bt">Token menjawab lewat sesi sebelah</span><span class="bv">20,9k</span><span class="bw">K4</span></div>
+      <div class="br on big"><span class="bk">C</span><span class="bt">Selisih A − B</span><span class="bv">16,8k</span><span class="bw">≈ 45% lebih murah</span></div>
+      <div class="br on"><span class="bk">D</span><span class="bt">Jawaban yang <b>hanya vault</b> punya</span><span class="bv">HDR + RFC</span><span class="bw">K7</span></div>
+    </div>
+    <div class="board-note"><b>C</b> adalah penghematan yang <b>kamu ukur sendiri hari ini</b>, bukan klaim dari slide. <b>D</b> bukan angka melainkan <b>nama berkas</b> — dan tidak satu pun ada di dalam repo: ada pertanyaan yang <b>tidak akan pernah dijawab oleh kode</b>, semurah apa pun cara membacanya.</div>
+  </section>
+
+  <!-- ══ 28 · PENUTUP — BAWA PULANG + EVALUASI ═════════════════ -->
+  <section class="slide dense s28" data-slide>
+    <div class="eyebrow">Penutup · Yang kamu bawa pulang<span class="sp"><span class="pg">panduan Penutup §2–§5</span><span class="who you"><span class="ic">🖐️</span>KAMU KETIK</span></span></div>
+    <div class="kq-cols">
+      <div class="kq-l">
+        <div class="facts col">
+          <div class="ft"><span class="fk">K3</span><span><code>.claude/rules/hooks-and-types.md</code> + <code>hooks/log-instructions.sh</code><br><span class="fd">aturan yang hanya dibayar saat dipakai, dan alat buktinya</span></span></div>
+          <div class="ft"><span class="fk">K2</span><span>codeburn guard<br><span class="fd">pagar anggaran per sesi</span></span></div>
+          <div class="ft"><span class="fk">K5·K6</span><span><code>graphify-out/</code> + git hook<br><span class="fd">graf kode yang menyegarkan dirinya sendiri</span></span></div>
+          <div class="ft"><span class="fk">K7</span><span><code>~/venturo-brain/</code> + global graph <code>kode</code> &amp; <code>otak</code><br><span class="fd">vault yang bisa dibuka di Obsidian</span></span></div>
+        </div>
+        <div class="note-s">Disebut sekilas, tidak dipraktekkan: <code>codeburn optimize --apply</code> · <code>graphify save-result</code> + <code>reflect</code> · <code>codebase-memory-mcp</code> · <code>graphify watch</code> · <code>tree</code> · <code>export callflow-html</code>.</div>
+      </div>
+      <div class="kq-r">
+        <div class="card-name">Tantangan besok pagi</div>
+        <div class="card-line"><span class="card-tag ok">TULIS</span><span>Ambil <b>satu</b> keputusan yang timmu ambil minggu ini, sekecil apa pun. Tulis satu catatan berbentuk HDR: <b>konteks, keputusan, alasan, opsi yang ditolak, konsekuensi</b>. Simpan di <code>~/venturo-brain/hdr-006-&lt;keputusanmu&gt;.md</code>, jalankan ulang <code>/graphify</code> seperti di K7 Langkah 2, lalu tanyakan sesuatu tentangnya.</span></div>
+        <div class="anchor"><span class="ck">🎯</span><span><span class="lb">Bagian yang paling berharga</span><b>"Opsi yang ditolak"</b> — dan itulah yang paling sering dilupakan.</span></div>
+        <div class="term md" style="max-width:900px;margin-top:14px">
+          <div class="term-bar"><span class="wb s">SLASH</span><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">evaluasi · di Claude Code</span></div>
+          <div class="term-body">/grademe</div>
+        </div>
+        <div class="note-s">Plugin ini terpasang di mesin tim sejak <b>w02</b>. Belum ada? <code>/plugin marketplace add venturo-id/venturo-claude</code> lalu <code>/plugin install grademe@venturo-tools</code>. Token belum terisi? <b>Skornya tetap keluar di layar</b> dan hanya gagal terunggah (<code>401</code>) — isi <code>VIBESCORE_API_KEY</code> di <code>~/.zshrc</code>, lalu jalankan ulang.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 29 · PENUTUP ══════════════════════════════════════════ -->
+  <section class="slide s29 mid cover-out" data-slide>
+    <div class="eyebrow">Minggu 2 · Season 2</div>
+    <div class="big-msg">Konteks bukan barang gratis.<br>Mulai hari ini kamu <span class="hl">mengukurnya</span>,<br><span class="hl">membatasinya</span>, dan <span class="hl">menitipkannya</span>.</div>
+    <div class="msg-note" style="max-width:1500px">A <b>37,7k</b> → B <b>20,9k</b> → hemat <b>≈45%</b>, plus satu jenis jawaban yang <b>hanya vault yang punya</b>.</div>
+    <div class="end-note">Sampai minggu depan. Bawa satu <code>hdr-006-*.md</code> buatanmu sendiri.</div>
+  </section>
+  <div id="num"><b>01</b> / 29</div>
+  <div id="hint">→ lanjut · ← mundur · ? bantuan</div>
+</div><!--/stage-->
+</div><!--/viewport-->
+
+<div id="help">
+  <div class="box">
+    <h3>Navigasi deck</h3>
+    <div class="hrow"><span>Lanjut (satu ketukan = satu langkah)</span><span class="hk">→</span></div>
+    <div class="hrow"><span>Mundur</span><span class="hk">←</span></div>
+    <div class="hrow"><span>Remote presenter</span><span class="hk">PageDown / PageUp</span></div>
+    <div class="hrow"><span>Slide pertama / terakhir</span><span class="hk">Home / End</span></div>
+    <div class="hrow"><span>Lompat ke slide</span><span class="hk">URL #n</span></div>
+    <div class="hrow"><span>Mode statis (screenshot)</span><span class="hk">?static=1</span></div>
+    <div class="close">Klik tidak memajukan slide. Tekan ? lagi untuk menutup.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var params = new URLSearchParams(location.search);
+  var STATIC = params.get('static') === '1';
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var INSTANT = STATIC || reduced;
+  if(STATIC) document.documentElement.classList.add('static');
+
+  var stage  = document.getElementById('stage');
+  var blobs  = document.getElementById('blobs');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var numEl  = document.getElementById('num');
+  var helpEl = document.getElementById('help');
+  var cur = 0, step = 0, gen = 0;
+
+  /* ══ DATA TERMINAL ══════════════════════════════════════════════
+     Semua blok <script class="term-data"> digabung jadi satu peta.  */
+  var TD = {};
+  Array.prototype.forEach.call(document.querySelectorAll('script.term-data'), function(s){
+    var o = {};
+    try { o = JSON.parse(s.textContent); } catch(e){ o = {}; }
+    for(var k in o){ if(Object.prototype.hasOwnProperty.call(o,k)) TD[k] = o[k]; }
+  });
+
+  /* ── badge "tempat mengetik" ─────────────────────────────────── */
+  function whereMeta(w){
+    switch(w){
+      case 'claude': return {cls:'c', txt:'KE CLAUDE',   pm:'>'};
+      case 'slash':  return {cls:'s', txt:'SLASH',       pm:'>'};
+      case 'edit':   return {cls:'r', txt:'SUNTING FILE', pm:'·'};
+      case 'read':   return {cls:'r', txt:'BACA SAJA',   pm:'·'};
+      default:       return {cls:'t', txt:'TERMINAL',    pm:'$'};
+    }
+  }
+  function el(tag, cls, txt){
+    var d = document.createElement(tag);
+    if(cls) d.className = cls;
+    if(txt !== undefined && txt !== null) d.textContent = txt;
+    return d;
+  }
+  /* output ditulis dengan createElement (isinya boleh mengandung < & │)
+     konvensi: baris berawalan » ditandai sebagai baris kunci.        */
+  function outNode(text){
+    var box = el('div','stp-out');
+    box.appendChild(el('span','lbl','hasil yang diharapkan'));
+    var lines = String(text).split('\n');
+    lines.forEach(function(ln, i){
+      if(ln.charAt(0) === '»'){
+        box.appendChild(el('span','hl-line', ln.replace(/^»\s?/,'')));
+      } else {
+        box.appendChild(document.createTextNode(ln));
+      }
+      if(i < lines.length-1) box.appendChild(document.createTextNode('\n'));
+    });
+    return box;
+  }
+  function barNode(title, cwd, meta){
+    var bar = el('div','term-bar');
+    bar.appendChild(el('span','wb '+meta.cls, meta.txt));
+    ['r','y','g'].forEach(function(c){ bar.appendChild(el('span','dot '+c)); });
+    bar.appendChild(el('span','term-title', title + (cwd ? '  ·  ' + cwd : '')));
+    return bar;
+  }
+
+  /* ══ SATU LANGKAH = DUA KETUKAN ══════════════════════════════════
+     ketukan 1 → header + perintah (diketik huruf demi huruf)
+     ketukan 2 → hasil yang diharapkan + catatannya
+     Tidak ada hasil yang boleh muncul sebelum perintahnya diketik.  */
+  function stepNode(st, idx, cwd, live){
+    var meta = whereMeta(st.w);
+    var box  = el('div','stp');
+    var beats = [];
+
+    var p1 = el('div','stp-part p-cmd');
+    var h  = el('div','stp-h');
+    h.appendChild(el('span','stp-n','LANGKAH '+(idx+1)));
+    h.appendChild(el('span','wb '+meta.cls, meta.txt));
+    if(cwd) h.appendChild(el('span','stp-cwd', cwd));
+    p1.appendChild(h);
+    var cmd = el('div','stp-cmd');
+    cmd.appendChild(el('span','pm', meta.pm));
+    var tx = el('span','tx');
+    if(live){ tx.className = 'tx type'; tx.setAttribute('data-text', st.cmd); }
+    else { tx.textContent = st.cmd; }
+    cmd.appendChild(tx);
+    p1.appendChild(cmd);
+    box.appendChild(p1);
+    beats.push({node:p1, kind:'cmd'});
+
+    if(st.out || st.note){
+      var p2 = el('div','stp-part p-out');
+      if(st.out)  p2.appendChild(outNode(st.out));
+      if(st.note) p2.appendChild(el('div','stp-note', st.note));
+      box.appendChild(p2);
+      beats.push({node:p2, kind:'out'});
+    }
+    if(!live){
+      box.classList.add('on');
+      beats.forEach(function(b){ b.node.classList.add('on'); });
+      beats = [];
+    }
+    return {box:box, beats:beats};
+  }
+
+  /* ── satu terminal ───────────────────────────────────────────── */
+  function buildTerm(host){
+    var d = TD[host.getAttribute('data-term')];
+    if(!d){ host.classList.add('missing'); return null; }
+    if(d.size) host.classList.add(d.size);
+    var live = !host.hasAttribute('data-all');
+    host.appendChild(barNode(d.title || 'terminal', d.cwd, whereMeta(d.steps[0].w)));
+    var body = el('div','term-body stps');
+    host.appendChild(body);
+    var beats = [];
+    d.steps.forEach(function(st, i){
+      var r = stepNode(st, i, d.cwd, live);
+      body.appendChild(r.box);
+      r.beats.forEach(function(b){ b.side = 0; beats.push(b); });
+    });
+    return {host:host, beats:beats, bodies:[body], sides:null, total:d.steps.length};
+  }
+
+  /* ── dua terminal berdampingan (sesi terpisah) ───────────────── */
+  function buildDual(host){
+    var d = TD[host.getAttribute('data-dual')];
+    if(!d) return null;
+    var sides = {}, bodies = [];
+    [1,2].forEach(function(n){
+      var spec = d['t'+n] || {};
+      var wrap = el('div','dt t'+n);
+      var lbl  = el('div','dt-lbl');
+      lbl.appendChild(el('span','nm', spec.title || ('T'+n)));
+      if(spec.cwd) lbl.appendChild(el('span','ds', spec.cwd));
+      wrap.appendChild(lbl);
+      var term = el('div','term');
+      /* judulnya sudah ada di label di atas kotak — bar cukup menyebut folder */
+      term.appendChild(barNode(spec.cwd || spec.title || ('T'+n), null, whereMeta(spec.w||'shell')));
+      var body = el('div','term-body stps');
+      term.appendChild(body);
+      wrap.appendChild(term);
+      host.appendChild(wrap);
+      sides[n] = {wrap:wrap, body:body};
+      bodies.push(body);
+    });
+    var beats = [];
+    d.steps.forEach(function(st, i){
+      var n = st.t || 1;
+      var r = stepNode(st, i, (d['t'+n]||{}).cwd, true);
+      sides[n].body.appendChild(r.box);
+      r.beats.forEach(function(b){ b.side = n; beats.push(b); });
+    });
+    return {host:host, beats:beats, bodies:bodies, sides:sides, total:d.steps.length};
+  }
+
+  /* ── satu daftar ketukan per slide, urut sesuai urutan bacaan ── */
+  slides.forEach(function(sl){
+    var hosts = sl.querySelectorAll('.term[data-term],.dual[data-dual]');
+    if(!hosts.length){ sl._terms = []; sl._beats = []; return; }
+    var terms = [], beats = [];
+    Array.prototype.forEach.call(hosts, function(h){
+      var t = h.classList.contains('dual') ? buildDual(h) : buildTerm(h);
+      if(!t) return;
+      terms.push(t);
+      t.beats.forEach(function(b){ b.term = t; beats.push(b); });
+    });
+    if(beats.length){
+      var holder = el('div','tbeats');
+      beats.forEach(function(){ holder.appendChild(el('span','fragment')); });
+      sl.appendChild(holder);
+    }
+    sl._terms = terms; sl._beats = beats;
+  });
+
+  /* ── mengetik ────────────────────────────────────────────────── */
+  function typeEl(el2, instant){
+    if(!el2) return;
+    var text = el2.getAttribute('data-text') || '';
+    var host = el2.closest ? el2.closest('.term-body') : null;
+    function toBottom(){ if(host) host.scrollTop = host.scrollHeight; }
+    if(instant || INSTANT){ el2.textContent = text; el2.classList.remove('typing'); toBottom(); return; }
+    var myGen = gen;
+    el2.textContent=''; el2.classList.add('typing');
+    var i = 0, speed = text.length > 300 ? 5 : (text.length > 90 ? 11 : 22);
+    (function tick(){
+      if(myGen !== gen){ return; }
+      if(i <= text.length){ el2.textContent = text.slice(0,i); i++; toBottom(); setTimeout(tick, speed); }
+      else { el2.classList.remove('typing'); toBottom(); }
+    })();
+  }
+  function typeIn(container, instant){
+    var els = container.querySelectorAll('.type');
+    for(var i=0;i<els.length;i++) typeEl(els[i], instant);
+  }
+
+  /* ── fragment ────────────────────────────────────────────────── */
+  function fragsOf(sl){ return Array.prototype.slice.call(sl.querySelectorAll('.fragment')); }
+  function reveal(fr, instant){ fr.classList.add('revealed'); typeIn(fr, instant); }
+  function hide(fr){ fr.classList.remove('revealed'); }
+
+  /* ── sinkronkan isi terminal dengan jumlah ketukan ───────────── */
+  function syncTerms(sl, instant){
+    var beats = sl._beats || [];
+    if(!beats.length) return;
+    var holder = sl.querySelector('.tbeats');
+    var n = holder ? holder.querySelectorAll('.fragment.revealed').length : 0;
+    beats.forEach(function(b, i){
+      var on = i < n;
+      if(on && !b.node.classList.contains('on')){
+        b.node.classList.add('on');
+        b.node.parentNode.classList.add('on');
+        if(b.kind === 'cmd') typeIn(b.node, !!instant);
+      } else if(!on && b.node.classList.contains('on')){
+        b.node.classList.remove('on');
+        var p = b.node.parentNode;
+        if(!p.querySelector('.stp-part.on')) p.classList.remove('on');
+      }
+    });
+    var last = n > 0 ? beats[n-1] : null;
+    (sl._terms || []).forEach(function(t){
+      t.bodies.forEach(function(bd){ bd.scrollTop = bd.scrollHeight; });
+      if(t.sides){
+        var act = (last && last.term === t) ? last.side : 0;
+        [1,2].forEach(function(k){ t.sides[k].wrap.classList.toggle('dim', act !== 0 && act !== k); });
+      }
+    });
+    var pill = sl.querySelector('[data-dpill]');
+    if(pill){
+      var done = 0, total = 0;
+      beats.forEach(function(b,i){ if(b.kind === 'cmd'){ total++; if(i < n) done++; } });
+      pill.textContent = 'langkah ' + done + ' / ' + total;
+    }
+  }
+
+  /* ── kontrol slide ───────────────────────────────────────────── */
+  function updateBlobs(i){
+    blobs.style.transform = 'translate('+((i % 4) * -34 - i*3)+'px,'+((i % 3) * 26 - 20)+'px)';
+  }
+  function pad(n){ return (n<10?'0':'')+n; }
+  function updateNum(){ numEl.innerHTML = '<b>'+pad(cur+1)+'</b> / '+slides.length; }
+
+  function show(i, atEnd){
+    i = Math.max(0, Math.min(slides.length-1, i));
+    gen++;
+    slides.forEach(function(s){ s.classList.remove('active'); });
+    cur = i;
+    var sl = slides[cur];
+    var frags = fragsOf(sl);
+    frags.forEach(function(f){ f.classList.remove('revealed'); });
+    sl.classList.add('active');
+    updateBlobs(cur); updateNum();
+    if(location.hash !== '#'+(cur+1)) history.replaceState(null,'','#'+(cur+1));
+
+    var instant = STATIC || !!atEnd;
+    if(instant){
+      step = frags.length;
+      frags.forEach(function(f){ f.classList.add('revealed'); });
+    } else {
+      step = 0;
+    }
+    syncTerms(sl, instant);
+  }
+
+  function next(){
+    var sl = slides[cur], frags = fragsOf(sl);
+    if(step < frags.length){ reveal(frags[step], false); step++; syncTerms(sl, false); }
+    else if(cur < slides.length-1){ show(cur+1, false); }
+  }
+  function prev(){
+    var sl = slides[cur], frags = fragsOf(sl);
+    if(step > 0){ step--; hide(frags[step]); syncTerms(sl, false); }
+    else if(cur > 0){ show(cur-1, true); }
+  }
+
+  /* ── fit / skala ─────────────────────────────────────────────── */
+  var CROP = 0.10;
+  function fit(){
+    if(window.innerWidth <= 820){ stage.style.transform = ''; return; }
+    var s = Math.min(window.innerWidth/1920, (window.innerHeight/1080)*(1+CROP));
+    stage.style.transform = 'scale('+s+')';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  /* ── input: HANYA papan ketik ────────────────────────────────── */
+  function toggleHelp(){ helpEl.classList.toggle('on'); }
+  document.addEventListener('keydown', function(e){
+    if(e.key==='?'){ e.preventDefault(); toggleHelp(); return; }
+    if(helpEl.classList.contains('on')){ if(e.key==='Escape') toggleHelp(); return; }
+    switch(e.key){
+      case 'ArrowRight': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft':  case 'PageUp':   e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); show(0,false); break;
+      case 'End':  e.preventDefault(); show(slides.length-1,false); break;
+    }
+  });
+  helpEl.addEventListener('click', toggleHelp);
+  window.addEventListener('hashchange', function(){
+    var n = parseInt((location.hash||'').replace('#',''),10);
+    if(!isNaN(n) && n>=1 && n<=slides.length && n-1 !== cur) show(n-1, false);
+  });
+
+  /* ── boot ────────────────────────────────────────────────────── */
+  var start = parseInt((location.hash||'').replace('#',''),10);
+  if(isNaN(start) || start<1 || start>slides.length) start = 1;
+  show(start-1, false);
+})();
+</script>
+</body>
+</html>

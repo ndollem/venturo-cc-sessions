@@ -32,6 +32,7 @@ roe/slides/*
 !w03/
 !w04/
 !w05/
+!w06/
 w0*/*
 !w01/slides/
 !w02/slides/
@@ -53,6 +54,11 @@ w03/slides/*
 !w05/slides/
 w05/slides/*
 !w05/slides/index.html
+
+# w06: hanya deck final (Season 2 · Minggu 2 · Token & 2nd Brain)
+!w06/slides/
+w06/slides/*
+!w06/slides/index.html
 
 # ── assets: hanya berkas yang benar-benar dipakai peserta ──
 !w01/assets/

@@ -125,16 +125,28 @@ JSON skor + baris upload `201 Created`. Bawa skormu tiap minggu (Challenge Besok
 kadaluarsa/salah → `401` saat upload, lihat `troubleshooting.md` minggu berjalan.
 
 ## 4. Prasyarat sesi lanjutan (w06–w07)
-> ⚠️ **Draft** — minggu ini belum dibangun; detail berikut mengikuti `curriculum-v4-plan.md` dan bisa
+> ⚠️ **Hanya w07 yang masih draft** — detailnya mengikuti `curriculum-v4-plan.md` dan bisa
 > berubah saat sesi benar-benar dibuild (patuhi pengumuman H-7 resmi tiap minggu di atas draft ini).
+> **w06 sudah dibangun** (panduan v7.2, 16 Agustus 2026); yang tertulis di bawah untuk w06 adalah
+> fakta, bukan rencana.
 >
 > **w05 sudah dibangun — prasyaratnya ada di §S2 di atas, bukan di sini.** Rencana lama
 > ("akun Supabase + `project_ref` per peserta, WAJIB H-7") **dibatalkan**: segmen Supabase kini
 > presenter-led, jadi peserta tak perlu menyiapkan apa pun selain GitHub PAT.
 
-- **w06 (Token Economy, Memory & 2nd Brain):** `uv` terpasang (`uv --version`; dipakai
-  `uv tool install graphifyy`). Obsidian (app) terpasang + 1 vault kosong siap dipakai (folder
-  `decisions/` & `knowledge/` disiapkan saat sesi).
+- **w06 (Token Economy, Memory & 2nd Brain) — sudah dibangun, dan minggu ini kamu TIDAK perlu
+  menyiapkan apa pun.** Seluruh instalasi dilakukan live di kartu K0 (12'), dengan asumsi
+  mesin peserta kosong. Yang perlu kamu tahu supaya tidak salah setup sendiri:
+  - `claude --version` **wajib 2.1.224+** (hook `InstructionsLoaded` & `/peers` tidak ada di
+    versi lama, dan gagalnya diam-diam). Kalau di bawah itu: `claude update`, lalu buka ulang.
+  - Repo latihan di-klon dari **tag `w06`**, bukan `main`:
+    `git clone --branch w06 …/venturo-benefit-survey.git` lalu **`git switch -c latihan`**.
+  - Vault Obsidian **tidak dibuat kosong** — disalin dari `assets/w06/venturo-brain` ke
+    **`~/venturo-brain`**, bersebelahan dengan `~/venturo-benefit-survey` (jangan bersarang).
+  - Obsidian (app) **opsional**: dipakai hanya untuk melihat hasil di akhir K7.
+  - `uv` & `codeburn` dipasang saat K0 — tak perlu duluan. Kalau kamu terlanjur memasang
+    `codeburn` sendiri dan `codeburn --version` menjawab `command not found`, itu bukan gagal
+    instalasi: folder bin npm global belum ada di PATH. K0 Langkah 4 membereskannya.
 - **w07 (Loop Engineering & Arsenal):** feature flag *agent teams* aktif di Claude Code (cek/aktifkan
   sebelum sesi, butuh restart). Vercel **opsional** — kalau mau ikut bonus deploy pribadi, siapkan akun
   Vercel + `vercel` CLI login duluan.
